@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import game.Dice;
+
 public class GameGUI extends Application {
 
     private static final List<Color> COLORS = Arrays.asList(
@@ -143,23 +145,20 @@ public class GameGUI extends Application {
         hexagon19.setTranslateX(-hexagon1.getOffsetX());
         hexagons.add(hexagon19);
 
-        hexagonsGroup.getChildren().addAll(hexagons);  // Add all hexagons to the group
+        hexagonsGroup.getChildren().addAll(hexagons);
 
-        // StackPane for background and hexagons, placing background first
-        StackPane hexagonsPane = new StackPane( hexagonsGroup);
-
-        // Create dice and button layout
-        StackPane dice1 = createDice();
-        StackPane dice2 = createDice();
-        HBox diceBox = new HBox(15, dice1, dice2);
+        // Dice and button layout
+        Dice dice1 = new Dice();
+        Dice dice2 = new Dice();
+        HBox diceBox = new HBox(15, dice1.getDicePane(), dice2.getDicePane());
         diceBox.setPadding(new Insets(10));
 
         // Roll button
         Button rollButton = new Button("Let's Rock n Roll!");
         rollButton.setFont(Font.font(20));
         rollButton.setOnAction(e -> {
-            int roll1 = rollDice(dice1);
-            int roll2 = rollDice(dice2);
+            int roll1 = dice1.roll();
+            int roll2 = dice2.roll();
             int sum = roll1 + roll2;
             highlightHexagonBySum(sum);
         });
@@ -169,13 +168,11 @@ public class GameGUI extends Application {
         bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
         bottomContainer.setPadding(new Insets(20, 20, 50, 20));
 
-        // Use BorderPane for main layout
-        BorderPane rootPane = new BorderPane();
-        rootPane.setCenter(hexagonsPane);         // Place hexagons with background at the center
-        rootPane.setBottom(bottomContainer);      // Place dice and button container at the bottom
+        // Create a StackPane to layer the background, hexagons, and dice/button container
+        StackPane mainPane = new StackPane(bg, hexagonsGroup, bottomContainer);
 
-        // Make the Scene cover the entire window
-        var scene = new Scene(rootPane);
+        // Create Scene and show stage
+        var scene = new Scene(mainPane);
         stage.setScene(scene);
         stage.setMaximized(true); // Maximize window to cover the screen
         stage.show();
@@ -196,29 +193,6 @@ public class GameGUI extends Application {
         }
         Collections.shuffle(numbers); // Randomize the order
         return numbers;
-    }
-
-    private StackPane createDice() {
-        // Create a larger square dice with rounded corners
-        Rectangle diceFace = new Rectangle(80, 80); // Increase size of the dice
-        diceFace.setFill(Color.WHITE);
-        diceFace.setStroke(Color.BLACK);
-        diceFace.setArcWidth(15);
-        diceFace.setArcHeight(15);
-
-        Text diceValue = new Text("1");
-        diceValue.setFont(Font.font(30)); // Increase font size for dice value
-
-        StackPane dice = new StackPane(diceFace, diceValue);
-        dice.setAlignment(Pos.CENTER);
-        return dice;
-    }
-
-    private int rollDice(StackPane dice) {
-        Text diceValue = (Text) dice.getChildren().get(1);
-        int roll = random.nextInt(6) + 1;
-        diceValue.setText(String.valueOf(roll));
-        return roll;
     }
 
     private void highlightHexagonBySum(int sum) {
@@ -274,7 +248,6 @@ public class GameGUI extends Application {
                 polygon.getPoints().add(Math.sin(angle) * radius / 1.1);
             }
 
-            // Display the number at the center of the hexagon
             Text numberText = new Text(String.valueOf(number));
             numberText.setFill(Color.WHITE);
             numberText.setFont(Font.font(20));
