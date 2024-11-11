@@ -8,7 +8,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -147,10 +146,11 @@ public class GameGUI extends Application {
 
         hexagonsGroup.getChildren().addAll(hexagons);
 
-        // Dice and button layout
+        // Dice layout
         Dice dice1 = new Dice();
         HBox diceBox = new HBox(15, dice1.getDicePane());
         diceBox.setPadding(new Insets(10));
+
         // Roll button
         Button rollButton = new Button("Let's Rock n Roll!");
         rollButton.setFont(Font.font(20));
@@ -160,47 +160,69 @@ public class GameGUI extends Application {
             // Create a new thread to roll the dice continuously and randomly highlight hexagons for 5 seconds
             new Thread(() -> {
                 long startTime = System.currentTimeMillis();
-                long duration = 1500; // Roll and highlight for 5 seconds
+                long duration = 1500;
 
                 while (System.currentTimeMillis() - startTime < duration) {
-                    // Run dice roll and hexagon highlight update on the JavaFX Application Thread
                     javafx.application.Platform.runLater(() -> {
                         dice1.roll();
                         highlightRandomHexagon(); // Randomly highlight a hexagon
                     });
 
-                    // Delay between updates to make it look like a rolling and flashing effect
                     try {
-                        Thread.sleep(100); // Delay for 100 ms between each update
+                        Thread.sleep(100);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
                 }
 
-                // After 5 seconds, stop rolling and calculate the result
                 javafx.application.Platform.runLater(() -> {
                     resetHexagonBorders(); // Reset all hexagon borders
                     int finalRoll1 = dice1.roll();
                     int sum = finalRoll1;
-                    highlightHexagonBySum(sum); // Highlight the hexagon with the final result
-                    highlightHexagonBySum(sum+10);
+                    highlightHexagonBySum(sum);
+                    highlightHexagonBySum(sum + 10);
                 });
             }).start();
         });
 
-        // Dice and button container
-        VBox bottomContainer = new VBox(15, diceBox, rollButton);
-        bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
-        bottomContainer.setPadding(new Insets(20, 20, 50, 20));
+        // Back to Main Menu button
+        Button backButton = new Button("Back to Main Menu");
+        backButton.setFont(Font.font(20));
+        backButton.setOnAction(e -> {
+            MainMenu mainMenu = new MainMenu();
+            Stage mainStage = new Stage();
+            try {
+                mainMenu.start(mainStage); // Open main menu in a new stage
+                stage.close(); // Close the current game stage
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
-        // Create a StackPane to layer the background, hexagons, and dice/button container
-        StackPane mainPane = new StackPane(bg, hexagonsGroup, bottomContainer);
+        // Layout for the dice and roll button on the left
+        VBox bottomLeftContainer = new VBox(15, diceBox, rollButton);
+        bottomLeftContainer.setPadding(new Insets(20));
+        bottomLeftContainer.setAlignment(Pos.BOTTOM_LEFT);
+
+        // Layout for the back button on the right
+        VBox bottomRightContainer = new VBox(backButton);
+        bottomRightContainer.setPadding(new Insets(20));
+        bottomRightContainer.setAlignment(Pos.BOTTOM_RIGHT);
+
+        // Main layout to arrange everything
+        BorderPane mainLayout = new BorderPane();
+        mainLayout.setCenter(hexagonsGroup);
+        mainLayout.setLeft(bottomLeftContainer); // Align dice and roll button on the bottom left
+        mainLayout.setRight(bottomRightContainer); // Align back button on the bottom right
+
+        // StackPane to hold the background and main layout
+        StackPane root = new StackPane(bg, mainLayout);
 
         // Create Scene and show stage
-        var scene = new Scene(mainPane);
+        Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Columbus Project");
-        stage.setMaximized(true); // Maximize window to cover the screen
+        stage.setFullScreen(true);
         stage.show();
     }
 
@@ -209,35 +231,31 @@ public class GameGUI extends Application {
     }
 
     private int getUniqueNumber() {
-        return uniqueNumbers.remove(0); // Retrieve and remove the first number
+        return uniqueNumbers.remove(0);
     }
 
     private List<Integer> generateUniqueNumbers(int start, int end) {
         List<Integer> numbers = new ArrayList<>();
         for (int i = start; i <= end; i++) {
-        	if(i != 10) numbers.add(i);
+            if (i != 10) numbers.add(i);
         }
-        Collections.shuffle(numbers); // Randomize the order
+        Collections.shuffle(numbers);
         return numbers;
     }
 
     private void highlightRandomHexagon() {
-        resetHexagonBorders(); // Reset all hexagon borders
-
-        // Randomly select a hexagon to highlight
+        resetHexagonBorders();
         Hexagon randomHexagon = hexagons.get(random.nextInt(hexagons.size()));
         randomHexagon.highlightBorder();
     }
 
     private void resetHexagonBorders() {
-        // Reset all hexagons' borders to default
         for (Hexagon hexagon : hexagons) {
             hexagon.resetBorder();
         }
     }
 
     private void highlightHexagonBySum(int sum) {
-        // Find and highlight the hexagon with the matching number
         for (Hexagon hexagon : hexagons) {
             if (hexagon.getNumber() == sum) {
                 hexagon.highlightBorder();
