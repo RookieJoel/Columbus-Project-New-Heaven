@@ -16,11 +16,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.media.AudioClip;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ public class GameGUI extends Application {
 
     private static final List<Color> COLORS = Arrays.asList(
             Color.CADETBLUE, Color.MEDIUMPURPLE, Color.MEDIUMSEAGREEN, Color.CORNFLOWERBLUE,
-            Color.YELLOW, Color.ORANGE, Color.SKYBLUE, Color.RED, Color.LIGHTGREEN
+            Color.DARKGOLDENROD, Color.ORANGE, Color.SKYBLUE, Color.RED, Color.LIGHTGREEN
     );
 
     private final Random random = new Random();
@@ -44,6 +44,10 @@ public class GameGUI extends Application {
     @Override
     public void start(Stage stage) {
         double HexagonRadius = 100;
+
+        // Load the dice rolling sound effect
+        String audioPath = ClassLoader.getSystemResource("sounds/DrumRoll.mp3").toString();
+        AudioClip diceSound = new AudioClip(audioPath);
 
         // Generate unique numbers from 1 to 19
         uniqueNumbers = generateUniqueNumbers(1, 19);
@@ -60,7 +64,7 @@ public class GameGUI extends Application {
         Group hexagonsGroup = new Group();
         Hexagon hexagon1 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagons.add(hexagon1);
-
+        
         Hexagon hexagon2 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagon2.setTranslateY(hexagon1.getOffsetY() * 2);
         hexagons.add(hexagon2);
@@ -144,6 +148,7 @@ public class GameGUI extends Application {
         hexagon19.setTranslateY(-hexagon1.getOffsetY() * 3);
         hexagon19.setTranslateX(-hexagon1.getOffsetX());
         hexagons.add(hexagon19);
+        
 
         hexagonsGroup.getChildren().addAll(hexagons);
 
@@ -157,10 +162,38 @@ public class GameGUI extends Application {
         Button rollButton = new Button("Let's Rock n Roll!");
         rollButton.setFont(Font.font(20));
         rollButton.setOnAction(e -> {
-            int roll1 = dice1.roll();
-            int roll2 = dice2.roll();
-            int sum = roll1 + roll2;
-            highlightHexagonBySum(sum);
+            diceSound.play(); // Play dice roll sound
+
+            // Create a new thread to roll the dice continuously and randomly highlight hexagons for 5 seconds
+            new Thread(() -> {
+                long startTime = System.currentTimeMillis();
+                long duration = 1500; // Roll and highlight for 5 seconds
+
+                while (System.currentTimeMillis() - startTime < duration) {
+                    // Run dice roll and hexagon highlight update on the JavaFX Application Thread
+                    javafx.application.Platform.runLater(() -> {
+                        dice1.roll();
+                        dice2.roll();
+                        highlightRandomHexagon(); // Randomly highlight a hexagon
+                    });
+
+                    // Delay between updates to make it look like a rolling and flashing effect
+                    try {
+                        Thread.sleep(100); // Delay for 100 ms between each update
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                // After 5 seconds, stop rolling and calculate the result
+                javafx.application.Platform.runLater(() -> {
+                    resetHexagonBorders(); // Reset all hexagon borders
+                    int finalRoll1 = dice1.roll();
+                    int finalRoll2 = dice2.roll();
+                    int sum = finalRoll1 + finalRoll2;
+                    highlightHexagonBySum(sum); // Highlight the hexagon with the final result
+                });
+            }).start();
         });
 
         // Dice and button container
@@ -195,12 +228,22 @@ public class GameGUI extends Application {
         return numbers;
     }
 
-    private void highlightHexagonBySum(int sum) {
-        // Reset all hexagons' borders
+    private void highlightRandomHexagon() {
+        resetHexagonBorders(); // Reset all hexagon borders
+
+        // Randomly select a hexagon to highlight
+        Hexagon randomHexagon = hexagons.get(random.nextInt(hexagons.size()));
+        randomHexagon.highlightBorder();
+    }
+
+    private void resetHexagonBorders() {
+        // Reset all hexagons' borders to default
         for (Hexagon hexagon : hexagons) {
             hexagon.resetBorder();
         }
+    }
 
+    private void highlightHexagonBySum(int sum) {
         // Find and highlight the hexagon with the matching number
         for (Hexagon hexagon : hexagons) {
             if (hexagon.getNumber() == sum) {
@@ -249,7 +292,7 @@ public class GameGUI extends Application {
             }
 
             Text numberText = new Text(String.valueOf(number));
-            numberText.setFill(Color.WHITE);
+            numberText.setFill(Color.BLACK);
             numberText.setFont(Font.font(20));
             numberText.setTranslateX(-10);
             numberText.setTranslateY(5);
