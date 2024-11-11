@@ -1,101 +1,239 @@
 package view;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class GameGUI extends Application {
 
+    private static final List<Color> COLORS = Arrays.asList(
+            Color.CADETBLUE, Color.MEDIUMPURPLE, Color.MEDIUMSEAGREEN, Color.CORNFLOWERBLUE,
+            Color.YELLOW, Color.ORANGE, Color.SKYBLUE, Color.RED, Color.LIGHTGREEN
+    );
+
+    private final Random random = new Random();
+    private List<Integer> uniqueNumbers;
+    private List<Hexagon> hexagons;
+
     @Override
     public void start(Stage stage) {
-
         double HexagonRadius = 100;
 
-        Hexagon hexagon1 = new Hexagon(HexagonRadius, Color.CADETBLUE);
+        // Generate unique numbers from 1 to 19
+        uniqueNumbers = generateUniqueNumbers(1, 19);
+        hexagons = new ArrayList<>();
 
-        Hexagon hexagon2 = new Hexagon(HexagonRadius, Color.MEDIUMPURPLE);
+        // Background Image
+        String imagePath = ClassLoader.getSystemResource("images/Space.png").toString();
+        ImageView bg = new ImageView(new Image(imagePath));
+        bg.setPreserveRatio(false);
+        bg.fitWidthProperty().bind(stage.widthProperty());
+        bg.fitHeightProperty().bind(stage.heightProperty());
+
+        // Create hexagons with random colors and unique numbers
+        Group hexagonsGroup = new Group();
+        Hexagon hexagon1 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagons.add(hexagon1);
+
+        Hexagon hexagon2 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagon2.setTranslateY(hexagon1.getOffsetY() * 2);
+        hexagons.add(hexagon2);
 
-        Hexagon hexagon3 = new Hexagon(HexagonRadius, Color.MEDIUMSEAGREEN);
+        Hexagon hexagon3 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagon3.setTranslateY(-hexagon1.getOffsetY() * 2);
+        hexagons.add(hexagon3);
 
-        Hexagon hexagon4 = new Hexagon(HexagonRadius, Color.CORNFLOWERBLUE);
+        Hexagon hexagon4 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagon4.setTranslateY(-hexagon1.getOffsetY());
         hexagon4.setTranslateX(hexagon1.getOffsetX());
+        hexagons.add(hexagon4);
 
-        Hexagon hexagon5 = new Hexagon(HexagonRadius, Color.YELLOW);
+        Hexagon hexagon5 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagon5.setTranslateY(-hexagon1.getOffsetY());
         hexagon5.setTranslateX(-hexagon1.getOffsetX());
+        hexagons.add(hexagon5);
 
-        Hexagon hexagon6 = new Hexagon(HexagonRadius, Color.ORANGE);
+        Hexagon hexagon6 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagon6.setTranslateY(hexagon1.getOffsetY());
         hexagon6.setTranslateX(-hexagon1.getOffsetX());
+        hexagons.add(hexagon6);
 
-        Hexagon hexagon7 = new Hexagon(HexagonRadius, Color.SKYBLUE);
+        Hexagon hexagon7 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagon7.setTranslateY(hexagon1.getOffsetY());
         hexagon7.setTranslateX(hexagon1.getOffsetX());
-        
-        Hexagon hexagon8 = new Hexagon(HexagonRadius, Color.SKYBLUE);
-        hexagon8.setTranslateY(hexagon1.getOffsetY() *4);
-        
-        Hexagon hexagon9 = new Hexagon(HexagonRadius, Color.SKYBLUE);
-        hexagon9.setTranslateY(hexagon1.getOffsetY()*2);
-        hexagon9.setTranslateX(hexagon1.getOffsetX()*2);
-        
-        Hexagon hexagon10 = new Hexagon(HexagonRadius, Color.CORNFLOWERBLUE);
-        hexagon10.setTranslateY(-hexagon1.getOffsetY()*2);
-        hexagon10.setTranslateX(hexagon1.getOffsetX()*2);
-        
-        Hexagon hexagon11 = new Hexagon(HexagonRadius, Color.ORANGE);
-        hexagon11.setTranslateY(hexagon1.getOffsetY()*2);
-        hexagon11.setTranslateX(-hexagon1.getOffsetX()*2);
-        
-        Hexagon hexagon12 = new Hexagon(HexagonRadius, Color.YELLOW);
-        hexagon12.setTranslateY(-hexagon1.getOffsetY()*2);
-        hexagon12.setTranslateX(-hexagon1.getOffsetX()*2);
-        
-        Hexagon hexagon13 = new Hexagon(HexagonRadius, Color.MEDIUMSEAGREEN);
+        hexagons.add(hexagon7);
+
+        Hexagon hexagon8 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon8.setTranslateY(hexagon1.getOffsetY() * 4);
+        hexagons.add(hexagon8);
+
+        Hexagon hexagon9 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon9.setTranslateY(hexagon1.getOffsetY() * 2);
+        hexagon9.setTranslateX(hexagon1.getOffsetX() * 2);
+        hexagons.add(hexagon9);
+
+        Hexagon hexagon10 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon10.setTranslateY(-hexagon1.getOffsetY() * 2);
+        hexagon10.setTranslateX(hexagon1.getOffsetX() * 2);
+        hexagons.add(hexagon10);
+
+        Hexagon hexagon11 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon11.setTranslateY(hexagon1.getOffsetY() * 2);
+        hexagon11.setTranslateX(-hexagon1.getOffsetX() * 2);
+        hexagons.add(hexagon11);
+
+        Hexagon hexagon12 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon12.setTranslateY(-hexagon1.getOffsetY() * 2);
+        hexagon12.setTranslateX(-hexagon1.getOffsetX() * 2);
+        hexagons.add(hexagon12);
+
+        Hexagon hexagon13 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
         hexagon13.setTranslateY(-hexagon1.getOffsetY() * 4);
-        
-        Hexagon hexagon14 = new Hexagon(HexagonRadius, Color.CORNFLOWERBLUE);
-        hexagon14.setTranslateX(hexagon1.getOffsetX()*2);
-        
-        Hexagon hexagon15 = new Hexagon(HexagonRadius, Color.CORNFLOWERBLUE);
-        hexagon15.setTranslateX(-hexagon1.getOffsetX()*2);
-        
-        Hexagon hexagon16 = new Hexagon(HexagonRadius, Color.SKYBLUE);
-        hexagon16.setTranslateY(-hexagon1.getOffsetY()*3);
+        hexagons.add(hexagon13);
+
+        Hexagon hexagon14 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon14.setTranslateX(hexagon1.getOffsetX() * 2);
+        hexagons.add(hexagon14);
+
+        Hexagon hexagon15 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon15.setTranslateX(-hexagon1.getOffsetX() * 2);
+        hexagons.add(hexagon15);
+
+        Hexagon hexagon16 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon16.setTranslateY(-hexagon1.getOffsetY() * 3);
         hexagon16.setTranslateX(hexagon1.getOffsetX());
-        
-        Hexagon hexagon17 = new Hexagon(HexagonRadius, Color.SKYBLUE);
-        hexagon17.setTranslateY(hexagon1.getOffsetY()*3);
+        hexagons.add(hexagon16);
+
+        Hexagon hexagon17 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon17.setTranslateY(hexagon1.getOffsetY() * 3);
         hexagon17.setTranslateX(-hexagon1.getOffsetX());
-        
-        Hexagon hexagon18 = new Hexagon(HexagonRadius, Color.RED);
-        hexagon18.setTranslateY(hexagon1.getOffsetY()*3);
+        hexagons.add(hexagon17);
+
+        Hexagon hexagon18 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon18.setTranslateY(hexagon1.getOffsetY() * 3);
         hexagon18.setTranslateX(hexagon1.getOffsetX());
-        
-        Hexagon hexagon19= new Hexagon(HexagonRadius, Color.RED);
-        hexagon19.setTranslateY(-hexagon1.getOffsetY()*3);
+        hexagons.add(hexagon18);
+
+        Hexagon hexagon19 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        hexagon19.setTranslateY(-hexagon1.getOffsetY() * 3);
         hexagon19.setTranslateX(-hexagon1.getOffsetX());
-        
-        Group hexagonsGroup = new Group(hexagon1, hexagon2, hexagon3, hexagon4, hexagon5, hexagon6, 
-        		hexagon7, hexagon8,hexagon9,hexagon10,hexagon11,hexagon12,hexagon13,hexagon14,hexagon15,
-        		hexagon16,hexagon17,hexagon18,hexagon19);
+        hexagons.add(hexagon19);
 
-        StackPane stackPane = new StackPane(hexagonsGroup);
+        hexagonsGroup.getChildren().addAll(hexagons);  // Add all hexagons to the group
 
-        var scene = new Scene(stackPane, 640, 480);
-        scene.setFill(Color.ANTIQUEWHITE);
+        // StackPane for background and hexagons, placing background first
+        StackPane hexagonsPane = new StackPane( hexagonsGroup);
+
+        // Create dice and button layout
+        StackPane dice1 = createDice();
+        StackPane dice2 = createDice();
+        HBox diceBox = new HBox(15, dice1, dice2);
+        diceBox.setPadding(new Insets(10));
+
+        // Roll button
+        Button rollButton = new Button("Let's Rock n Roll!");
+        rollButton.setFont(Font.font(20));
+        rollButton.setOnAction(e -> {
+            int roll1 = rollDice(dice1);
+            int roll2 = rollDice(dice2);
+            int sum = roll1 + roll2;
+            highlightHexagonBySum(sum);
+        });
+
+        // Dice and button container
+        VBox bottomContainer = new VBox(15, diceBox, rollButton);
+        bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
+        bottomContainer.setPadding(new Insets(20, 20, 50, 20));
+
+        // Use BorderPane for main layout
+        BorderPane rootPane = new BorderPane();
+        rootPane.setCenter(hexagonsPane);         // Place hexagons with background at the center
+        rootPane.setBottom(bottomContainer);      // Place dice and button container at the bottom
+
+        // Make the Scene cover the entire window
+        var scene = new Scene(rootPane);
         stage.setScene(scene);
+        stage.setMaximized(true); // Maximize window to cover the screen
         stage.show();
+    }
+
+    private Color getRandomColor() {
+        return COLORS.get(random.nextInt(COLORS.size()));
+    }
+
+    private int getUniqueNumber() {
+        return uniqueNumbers.remove(0); // Retrieve and remove the first number
+    }
+
+    private List<Integer> generateUniqueNumbers(int start, int end) {
+        List<Integer> numbers = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            numbers.add(i);
+        }
+        Collections.shuffle(numbers); // Randomize the order
+        return numbers;
+    }
+
+    private StackPane createDice() {
+        // Create a larger square dice with rounded corners
+        Rectangle diceFace = new Rectangle(80, 80); // Increase size of the dice
+        diceFace.setFill(Color.WHITE);
+        diceFace.setStroke(Color.BLACK);
+        diceFace.setArcWidth(15);
+        diceFace.setArcHeight(15);
+
+        Text diceValue = new Text("1");
+        diceValue.setFont(Font.font(30)); // Increase font size for dice value
+
+        StackPane dice = new StackPane(diceFace, diceValue);
+        dice.setAlignment(Pos.CENTER);
+        return dice;
+    }
+
+    private int rollDice(StackPane dice) {
+        Text diceValue = (Text) dice.getChildren().get(1);
+        int roll = random.nextInt(6) + 1;
+        diceValue.setText(String.valueOf(roll));
+        return roll;
+    }
+
+    private void highlightHexagonBySum(int sum) {
+        // Reset all hexagons' borders
+        for (Hexagon hexagon : hexagons) {
+            hexagon.resetBorder();
+        }
+
+        // Find and highlight the hexagon with the matching number
+        for (Hexagon hexagon : hexagons) {
+            if (hexagon.getNumber() == sum) {
+                hexagon.highlightBorder();
+                break;
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -107,23 +245,21 @@ public class GameGUI extends Application {
         private Polygon polygon;
         private double radius;
         private double radianStep = (2 * Math.PI) / 6;
+        private int number;
 
         private double offsetY;
         private double offsetX;
 
-        public Hexagon(double radius, Paint color) {
+        public Hexagon(double radius, Paint color, int number) {
             this.radius = radius;
-            makeHexagon(radius, color);
+            this.number = number;
+            makeHexagon(radius, color, number);
             offsetY = calculateApothem();
-            
-            
-            
             offsetX = radius * 1.5;
-            changeTittle();
-
+            changeTitle();
         }
 
-        private void makeHexagon(double radius, Paint color) {
+        private void makeHexagon(double radius, Paint color, int number) {
             polygon = new Polygon();
             this.getChildren().add(polygon);
             polygon.setFill(color);
@@ -134,20 +270,36 @@ public class GameGUI extends Application {
 
             for (int i = 0; i < 6; i++) {
                 double angle = radianStep * i;
-
                 polygon.getPoints().add(Math.cos(angle) * radius / 1.1);
                 polygon.getPoints().add(Math.sin(angle) * radius / 1.1);
-
             }
+
+            // Display the number at the center of the hexagon
+            Text numberText = new Text(String.valueOf(number));
+            numberText.setFill(Color.WHITE);
+            numberText.setFont(Font.font(20));
+            numberText.setTranslateX(-10);
+            numberText.setTranslateY(5);
+            this.getChildren().add(numberText);
         }
 
-        public void changeTittle() {
+        public void highlightBorder() {
+            polygon.setStroke(Color.RED);
+        }
 
+        public void resetBorder() {
+            polygon.setStroke(Color.WHITESMOKE);
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void changeTitle() {
             polygon.setOnMouseClicked(e -> {
                 Stage stage = (Stage) this.getScene().getWindow();
                 stage.setTitle(polygon.getFill().toString());
             });
-
         }
 
         public double getOffsetY() {
@@ -159,11 +311,7 @@ public class GameGUI extends Application {
         }
 
         private double calculateApothem() {
-            
             return (Math.tan(radianStep) * radius) / 2;
-
         }
-
     }
-
 }
