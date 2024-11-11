@@ -30,7 +30,7 @@ public class GameGUI extends Application {
 
     private static final List<Color> COLORS = Arrays.asList(
             Color.CADETBLUE, Color.MEDIUMPURPLE, Color.MEDIUMSEAGREEN, Color.CORNFLOWERBLUE,
-            Color.DARKGOLDENROD, Color.ORANGE, Color.SKYBLUE, Color.RED, Color.LIGHTGREEN
+            Color.DARKGOLDENROD, Color.ORANGE, Color.SKYBLUE, Color.INDIANRED, Color.LIGHTGREEN
     );
 
     private final Random random = new Random();
@@ -58,7 +58,7 @@ public class GameGUI extends Application {
 
         // Create hexagons with random colors and unique numbers
         Group hexagonsGroup = new Group();
-        Hexagon hexagon1 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
+        Hexagon hexagon1 = new Hexagon(HexagonRadius, getRandomColor(), 10);
         hexagons.add(hexagon1);
         
         Hexagon hexagon2 = new Hexagon(HexagonRadius, getRandomColor(), getUniqueNumber());
@@ -149,10 +149,8 @@ public class GameGUI extends Application {
 
         // Dice and button layout
         Dice dice1 = new Dice();
-        Dice dice2 = new Dice();
-        HBox diceBox = new HBox(15, dice1.getDicePane(), dice2.getDicePane());
+        HBox diceBox = new HBox(15, dice1.getDicePane());
         diceBox.setPadding(new Insets(10));
-
         // Roll button
         Button rollButton = new Button("Let's Rock n Roll!");
         rollButton.setFont(Font.font(20));
@@ -168,7 +166,6 @@ public class GameGUI extends Application {
                     // Run dice roll and hexagon highlight update on the JavaFX Application Thread
                     javafx.application.Platform.runLater(() -> {
                         dice1.roll();
-                        dice2.roll();
                         highlightRandomHexagon(); // Randomly highlight a hexagon
                     });
 
@@ -184,9 +181,9 @@ public class GameGUI extends Application {
                 javafx.application.Platform.runLater(() -> {
                     resetHexagonBorders(); // Reset all hexagon borders
                     int finalRoll1 = dice1.roll();
-                    int finalRoll2 = dice2.roll();
-                    int sum = finalRoll1 + finalRoll2;
+                    int sum = finalRoll1;
                     highlightHexagonBySum(sum); // Highlight the hexagon with the final result
+                    highlightHexagonBySum(sum+10);
                 });
             }).start();
         });
@@ -202,6 +199,7 @@ public class GameGUI extends Application {
         // Create Scene and show stage
         var scene = new Scene(mainPane);
         stage.setScene(scene);
+        stage.setTitle("Columbus Project");
         stage.setMaximized(true); // Maximize window to cover the screen
         stage.show();
     }
@@ -217,7 +215,7 @@ public class GameGUI extends Application {
     private List<Integer> generateUniqueNumbers(int start, int end) {
         List<Integer> numbers = new ArrayList<>();
         for (int i = start; i <= end; i++) {
-            numbers.add(i);
+        	if(i != 10) numbers.add(i);
         }
         Collections.shuffle(numbers); // Randomize the order
         return numbers;

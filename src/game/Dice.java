@@ -12,8 +12,8 @@ import java.util.Random;
 
 public class Dice {
 
-    private static final int DICE_SIZE = 80;
-    private static final int FONT_SIZE = 30;
+    private static final int DICE_SIZE = 100;
+    private static final int FONT_SIZE = 50;
 
     private final Random random = new Random();
     private final StackPane dicePane;
@@ -38,7 +38,7 @@ public class Dice {
 
     // Method to roll the dice and update the displayed value
     public int roll() {
-        int rollResult = random.nextInt(6) + 1;
+        int rollResult = random.nextInt(10);
         diceValueText.setText(String.valueOf(rollResult));
         return rollResult;
     }
