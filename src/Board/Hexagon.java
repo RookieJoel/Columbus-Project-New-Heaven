@@ -16,13 +16,19 @@ public class Hexagon extends Group {
     private double radius;
     private double radianStep = (2 * Math.PI) / 6;
     private int number;
+    private Resource resource;
+    private Paint color;
 
     private double offsetY;
     private double offsetX;
+	
+	
 
-    public Hexagon(double radius, Paint color, int number) {
+    public Hexagon(double radius, int number,Resource resource) {
         this.radius = radius;
         this.number = number;
+        this.resource = resource;
+        this.color = resource.getColor();
         makeHexagon(radius, color, number);
         offsetY = calculateApothem();
         offsetX = radius * 1.5;
@@ -63,6 +69,9 @@ public class Hexagon extends Group {
     public int getNumber() {
         return number;
     }
+    public void setResource() {
+    	
+    }
 
     public void changeTitle() {
         polygon.setOnMouseClicked(e -> {
@@ -82,4 +91,9 @@ public class Hexagon extends Group {
     private double calculateApothem() {
         return (Math.tan(radianStep) * radius) / 2;
     }
+
+	public void giveResource() {
+		// TODO Auto-generated method stub
+		
+	}
 }

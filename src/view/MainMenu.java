@@ -19,39 +19,34 @@ public class MainMenu extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Set the background image
-    	String imagePath = ClassLoader.getSystemResource("images/new.png").toString();
-    	ImageView bg = new ImageView(new Image(imagePath));
+        String imagePath = ClassLoader.getSystemResource("images/new.png").toString();
+        ImageView bg = new ImageView(new Image(imagePath));
         bg.fitWidthProperty().bind(primaryStage.widthProperty());
         bg.fitHeightProperty().bind(primaryStage.heightProperty());
         bg.setPreserveRatio(false);
 
         // Load custom font
-        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/airstrikeexpand.ttf"), 60);
+        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/Steelar-j9Vnj.otf"), 50);
 
         // Game Title
-     // Game Title
         Text title = new Text("Columbus Project : New Heaven");
         title.setFont(customFont);
-        title.setFill(Color.HOTPINK); // Fill color for the font
-        title.setStroke(Color.BLACK); // Stroke color for the font
-        title.setStrokeWidth(5); // Width of the stroke
-        title.setTranslateY(-250); // Position title towards the top
-
+        title.setFill(Color.HOTPINK);
+        title.setStroke(Color.BLACK);
+        title.setStrokeWidth(2);
+        title.setTranslateY(-250);
 
         // Create main buttons
         Button startButton = createMainButton("START");
         Button howToPlayButton = createSecondaryButton("How to Play");
         Button exitButton = createSecondaryButton("EXIT");
 
-        // Credits text
-        Text creditsText = new Text("Credits");
-        creditsText.setFont(Font.font("Arial", 18));
-        creditsText.setFill(Color.LIGHTGRAY);
-        creditsText.setTranslateY(50);
-
         // Button actions
         startButton.setOnAction(e -> openGame(primaryStage));
-        howToPlayButton.setOnAction(e -> showHelp());
+        howToPlayButton.setOnAction(e -> {
+            Help help = new Help(); // สร้างอินสแตนซ์ของ Help
+            help.showHelpWindow(); // เรียกหน้าต่าง Help
+        });
         exitButton.setOnAction(e -> primaryStage.close());
 
         // Arrange buttons horizontally with main button in the center
@@ -59,10 +54,10 @@ public class MainMenu extends Application {
         buttonLayout.setAlignment(Pos.CENTER);
 
         // Main layout with background, title, buttons, and credits
-        VBox mainLayout = new VBox(30, title, buttonLayout, creditsText);
+        VBox mainLayout = new VBox(30, title, buttonLayout);
         mainLayout.setAlignment(Pos.CENTER);
 
-        StackPane rootPane = new StackPane(bg,mainLayout);
+        StackPane rootPane = new StackPane(bg, mainLayout);
         Scene mainScene = new Scene(rootPane, 800, 600);
 
         primaryStage.setScene(mainScene);
@@ -96,11 +91,6 @@ public class MainMenu extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void showHelp() {
-        // Show help instructions
-        System.out.println("Showing help instructions...");
     }
 
     public static void main(String[] args) {
