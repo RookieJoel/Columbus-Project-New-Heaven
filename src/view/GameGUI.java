@@ -10,7 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -38,7 +37,7 @@ public class GameGUI extends Application {
 
         // Load the dice rolling sound effect
         String audioPath = ClassLoader.getSystemResource("sounds/DrumRoll.mp3").toString();
-        //AudioClip diceSound = new AudioClip(audioPath);
+        AudioClip diceSound = new AudioClip(audioPath);
 
         // Generate unique numbers from 1 to 19
         uniqueNumbers = generateUniqueNumbers(1, 19);
@@ -54,7 +53,7 @@ public class GameGUI extends Application {
         // Create hexagons with random colors and unique numbers
         Group hexagonsGroup = new Group();
         Hexagon mainhexagon = new Hexagon(HexagonRadius,10,Resource.JOJOLIUM);
-        mainhexagon.setResource();
+//        mainhexagon.setResource();
         hexagons.add(mainhexagon);
         int x = 0;
         int n = 4;
@@ -96,7 +95,7 @@ public class GameGUI extends Application {
         Button rollButton = new Button("Let's Rock n Roll!");
         rollButton.setFont(Font.font(20));
         rollButton.setOnAction(e -> {
-            //diceSound.play(); // Play dice roll sound
+            diceSound.play(); // Play dice roll sound
 
             // Create a new thread to roll the dice continuously and randomly highlight hexagons for 5 seconds
             new Thread(() -> {
@@ -123,8 +122,8 @@ public class GameGUI extends Application {
                     resetHexagonBorders(); // Reset all hexagon borders
                     int finalRoll1 = dice1.roll();
                     int sum = finalRoll1;
-                    highlightHexagonBySum(sum); // Highlight the hexagon with the final result
-                    highlightHexagonBySum(sum+10);
+                    highlightHexagon(sum); // Highlight the hexagon with the final result
+                    highlightHexagon(sum+10);
                 });
             }).start();
         });
@@ -198,7 +197,7 @@ public class GameGUI extends Application {
         }
     }
 
-    private void highlightHexagonBySum(int sum) {
+    private void highlightHexagon(int sum) {
         // Find and highlight the hexagon with the matching number
         for (Hexagon hexagon : hexagons) {
             if (hexagon.getNumber() == sum) {
