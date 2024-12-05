@@ -5,6 +5,7 @@ import game.Dice;
 import board.Resource;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -30,10 +31,12 @@ public class GameGUI extends Application {
     private final Random random = new Random();
     private List<Integer> uniqueNumbers;
     private List<Hexagon> hexagons;
+    private final int GAPX = 10;
+    private final int GAPY = 5;
 
     @Override
     public void start(Stage stage) {
-        double HexagonRadius = 100;
+        double HexagonRadius = 95;
 
         // Load the dice rolling sound effect
         String audioPath = ClassLoader.getSystemResource("sounds/DrumRoll.mp3").toString();
@@ -64,13 +67,13 @@ public class GameGUI extends Application {
         	if(y == 0)x =2;
         		
         	Hexagon hexagon = new Hexagon(HexagonRadius, getUniqueNumber(),Resource.randomResource());
-        	hexagon.setTranslateY(mainhexagon.getOffsetY()*y);
-            hexagon.setTranslateX(mainhexagon.getOffsetX()*x);
+        	hexagon.setTranslateY((mainhexagon.getOffsetY()+GAPY)*y);
+            hexagon.setTranslateX((mainhexagon.getOffsetX()+GAPX)*x);
             hexagons.add(hexagon);
             
             Hexagon ahexagon = new Hexagon(HexagonRadius,getUniqueNumber(),Resource.randomResource());
-            ahexagon.setTranslateY(mainhexagon.getOffsetY()*y);
-            ahexagon.setTranslateX(mainhexagon.getOffsetX()*-x);
+            ahexagon.setTranslateY((mainhexagon.getOffsetY()+GAPY)*y);
+            ahexagon.setTranslateX((mainhexagon.getOffsetX()+GAPX)*-x);
             hexagons.add(ahexagon);    
         }
         while(n!=0) {
@@ -79,8 +82,8 @@ public class GameGUI extends Application {
         	if(n%2==0)y = n;
         	if(n%2==1)y = -n-1;
         	Hexagon hexagon = new Hexagon(HexagonRadius,getUniqueNumber(),Resource.randomResource());
-        	hexagon.setTranslateY(mainhexagon.getOffsetY()*y);
-            hexagon.setTranslateX(mainhexagon.getOffsetX()*x);
+        	hexagon.setTranslateY((mainhexagon.getOffsetY()+GAPY)*y);
+            hexagon.setTranslateX((mainhexagon.getOffsetX()+GAPX)*x);
             hexagons.add(hexagon);
             n--;
         }
@@ -104,7 +107,7 @@ public class GameGUI extends Application {
 
                 while (System.currentTimeMillis() - startTime < duration) {
                     // Run dice roll and hexagon highlight update on the JavaFX Application Thread
-                    javafx.application.Platform.runLater(() -> {
+                    Platform.runLater(() -> {
                         dice1.roll();
                         highlightRandomHexagon(); // Randomly highlight a hexagon
                     });
@@ -118,7 +121,7 @@ public class GameGUI extends Application {
                 }
 
                 // After 5 seconds, stop rolling and calculate the result
-                javafx.application.Platform.runLater(() -> {
+                Platform.runLater(() -> {
                     resetHexagonBorders(); // Reset all hexagon borders
                     int finalRoll1 = dice1.roll();
                     int sum = finalRoll1;

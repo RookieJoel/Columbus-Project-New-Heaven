@@ -30,7 +30,7 @@ public class Hexagon extends Group {
         setResource(resource); // Set the image resource first to make sure it’s in the background
         offsetY = calculateApothem();
         offsetX = radius * 1.5;
-
+        	
         // Add border on hexagon
         addHexagonBorder();
         
@@ -39,6 +39,7 @@ public class Hexagon extends Group {
         
         // Title change on click
         changeTitle();
+        
     }
 
     private void addCenteredNumberText() {
@@ -48,6 +49,8 @@ public class Hexagon extends Group {
         Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/KnightWarrior-w16n8.otf"), 30);
         numberText.setFont(customFont);
         numberText.setFill(Color.YELLOW);
+        numberText.setStroke(Color.ORANGE);
+        numberText.setStrokeWidth(2);
         
         // Position text in the center of the hexagon using StackPane
         StackPane centeredText = new StackPane(numberText);
