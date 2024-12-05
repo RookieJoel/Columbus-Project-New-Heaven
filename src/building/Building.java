@@ -9,13 +9,20 @@ public abstract class Building {
 	    private int prosperityPoints; // Points the building contributes to the player
 	    private Hexagon position; // Hexagon where the building is constructed
 	    private boolean isDestroyed; // Indicates if the building has been destroyed
-
-	    public Building(String name, int hp, int prosperityPoints, Hexagon position) {
+	    
+	    
+	 // Upgrade properties
+	    private int upgradeLevel; // Current upgrade level
+	    private int upgradeCost; // Cost to upgrade
+	    
+	    public Building(String name, int hp, int prosperityPoints, Hexagon position, int maxUpgradeLevel, int initialUpgradeCost) {
 	        this.name = name;
 	        this.hp = hp;
 	        this.prosperityPoints = prosperityPoints;
 	        this.position = position;
 	        this.isDestroyed = false;
+	        this.upgradeLevel = 1; // Start at level 1
+	        this.upgradeCost = initialUpgradeCost;
 
 	        // Generate hash-based ID
 	        this.id = generateId(position, name);
@@ -26,7 +33,15 @@ public abstract class Building {
 	        int tileNumber = position != null ? position.getNumber() : 0;
 	        return name + "-" + Integer.toHexString(tileNumber).toUpperCase();
 	    }
+	    
+	    public int getUpgradeCost() {
+	        return upgradeCost;
+	    }
 
+	    public int getUpgradeLevel() {
+	        return upgradeLevel;
+	    }
+	    
 	    // Getters and setters
 	    public String getName() {
 	        return name;
