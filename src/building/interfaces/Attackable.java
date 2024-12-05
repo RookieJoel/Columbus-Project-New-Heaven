@@ -1,7 +1,7 @@
 package building.interfaces;
 
 public interface Attackable {
-    void takeDamage(int damage);
+    void attack(int damage);
     boolean isDestroyed();
     int getCurrentHP();
 }

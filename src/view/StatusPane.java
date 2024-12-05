@@ -3,65 +3,56 @@ package view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import java.util.Map;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import player.Player;
 
 public class StatusPane extends VBox {
     private Label hpLabel;
-    private Label prosperityLabel;
-    private HBox resourceBox;
+    private VBox resourceBox;
 
-    public StatusPane(String playerName, int initialHP, int initialProsperity, Map<String, Integer> resources) {
+    public StatusPane(Player player) {
         super(10); // Spacing between elements
         this.setPadding(new Insets(10));
         this.setAlignment(Pos.TOP_CENTER);
 
+        // Load the custom font
+        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/KnightWarrior-w16n8.otf"), 30);
+
+
         // Player name
-        Label nameLabel = new Label(playerName);
-        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        Label nameLabel = new Label(player.getName());
+        nameLabel.setFont(customFont);
+        nameLabel.setTextFill(Color.WHITESMOKE); // Set text color to whitesmoke
 
-        // HP and Prosperity
-        hpLabel = new Label("HP: " + initialHP);
-        prosperityLabel = new Label("Prosperity: " + initialProsperity);
+        // HP
+        hpLabel = new Label("HP: " + player.getHp());
+        hpLabel.setFont(customFont);
+        hpLabel.setTextFill(Color.WHITESMOKE); // Set text color to whitesmoke
 
-        // Resource display
-        resourceBox = new HBox(5); // Spacing between resources
-        resourceBox.setAlignment(Pos.CENTER);
-        for (Map.Entry<String, Integer> resource : resources.entrySet()) {
-            ImageView resourceIcon = new ImageView(new Image(ClassLoader.getSystemResource(resource.getKey()).toString()));
-            resourceIcon.setFitWidth(20);
-            resourceIcon.setFitHeight(20);
-            Label resourceLabel = new Label(resource.getValue().toString());
-            resourceBox.getChildren().addAll(resourceIcon, resourceLabel);
-        }
+        // Resources display
+        resourceBox = new VBox(5); // Spacing between resources
+        updateResources(player);
 
-        // Add elements to VBox
-        this.getChildren().addAll(nameLabel, hpLabel, prosperityLabel, resourceBox);
+        // Add all elements to VBox
+        this.getChildren().addAll(nameLabel, hpLabel, resourceBox);
     }
 
     // Update HP
-    public void updateHP(int newHP) {
-        hpLabel.setText("HP: " + newHP);
+    public void updateHp(int hp) {
+        hpLabel.setText("HP: " + hp);
     }
 
-    // Update Prosperity Points
-    public void updateProsperity(int newProsperity) {
-        prosperityLabel.setText("Prosperity: " + newProsperity);
-    }
-
-    // Update Resources
-    public void updateResources(Map<String, Integer> newResources) {
+    // Update Resources from Player's inventory
+    public void updateResources(Player player) {
         resourceBox.getChildren().clear();
-        for (Map.Entry<String, Integer> resource : newResources.entrySet()) {
-            ImageView resourceIcon = new ImageView(new Image(ClassLoader.getSystemResource(resource.getKey()).toString()));
-            resourceIcon.setFitWidth(20);
-            resourceIcon.setFitHeight(20);
-            Label resourceLabel = new Label(resource.getValue().toString());
-            resourceBox.getChildren().addAll(resourceIcon, resourceLabel);
-        }
+        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/KnightWarrior-w16n8.otf"), 20); // Smaller font for resources
+        player.getInventory().getResources().forEach((resource, amount) -> {
+            Label resourceLabel = new Label(resource + ": " + amount);
+            resourceLabel.setFont(customFont);
+            resourceLabel.setTextFill(Color.WHITESMOKE); // Set text color to whitesmoke
+            resourceBox.getChildren().add(resourceLabel);
+        });
     }
 }

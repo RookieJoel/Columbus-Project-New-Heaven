@@ -3,7 +3,7 @@ package view;
 import board.Hexagon;  // นำเข้า Hexagon จาก package board
 import game.Dice;
 import board.Resource;
-
+import building.Colony;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -13,13 +13,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import player.Player;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -90,6 +97,46 @@ public class GameGUI extends Application {
 
         hexagonsGroup.getChildren().addAll(hexagons);
         
+        Hexagon leftmostHexagon = hexagons.get(0);
+        Hexagon rightmostHexagon = hexagons.get(0);
+
+        for (Hexagon hex : hexagons) {
+            if (hex.getTranslateX() < leftmostHexagon.getTranslateX()) {
+                leftmostHexagon = hex;
+            }
+            if (hex.getTranslateX() > rightmostHexagon.getTranslateX()) {
+                rightmostHexagon = hex;
+            }
+        }
+        
+     // Assign colonies to players
+        Colony colony1 = new Colony(leftmostHexagon);
+        Colony colony2 = new Colony(rightmostHexagon);
+
+        Player player1 = new Player(1, "Player 1", colony1);
+        Player player2 = new Player(2, "Player 2", colony2);
+
+     // Add resources for players
+        player1.getInventory().addResource("VIBRANIUM", 5);
+        player1.getInventory().addResource("OIL", 3);
+        player1.getInventory().addResource("COPPER", 2);
+
+        player2.getInventory().addResource("URANIUM", 4);
+        player2.getInventory().addResource("JOJOLIUM", 1);
+        player2.getInventory().addResource("OIL", 2);
+
+
+     // Create StatusPane
+        StatusPane player1Status = new StatusPane(player1);
+        player1Status.setAlignment(Pos.TOP_LEFT);
+        player1Status.setPadding(new Insets(10));
+        
+        
+        StatusPane player2Status = new StatusPane(player2);
+        player2Status.setAlignment(Pos.TOP_RIGHT);
+        player2Status.setPadding(new Insets(10));
+
+        
 		// Dice and button layout
         Dice dice1 = new Dice();
         HBox diceBox = new HBox(15, dice1.getDicePane());
@@ -145,21 +192,34 @@ public class GameGUI extends Application {
             }
         });
 
-        // Layout for the dice and roll button on the left
-        VBox bottomLeftContainer = new VBox(15, diceBox, rollButton);
-        bottomLeftContainer.setPadding(new Insets(20));
-        bottomLeftContainer.setAlignment(Pos.BOTTOM_LEFT);
+        VBox bottomLeftContainer = new VBox(10, dice1.getDicePane(), rollButton);
+        bottomLeftContainer.setPadding(new Insets(10));
+        bottomLeftContainer.setAlignment(Pos.CENTER_LEFT);
 
-        // Layout for the back button on the right
-        VBox bottomRightContainer = new VBox(backButton);
-        bottomRightContainer.setPadding(new Insets(20));
-        bottomRightContainer.setAlignment(Pos.BOTTOM_RIGHT);
-        // Main layout to arrange everything
+        VBox bottomRightContainer = new VBox(10, backButton);
+        bottomRightContainer.setPadding(new Insets(10));
+        bottomRightContainer.setAlignment(Pos.CENTER_RIGHT);
+        
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        
+        HBox bottomContainer = new HBox();
+        bottomContainer.setPadding(new Insets(10));
+        bottomContainer.setSpacing(20); // Add spacing between left and right sections
+        bottomContainer.setAlignment(Pos.CENTER); // Center align the HBox
+        bottomContainer.getChildren().addAll(bottomLeftContainer, spacer,bottomRightContainer);
+        
+        // Layout
         BorderPane mainLayout = new BorderPane();
+        mainLayout.setLeft(player1Status); // Place Player 1's status on the left
+        mainLayout.setRight(player2Status);
+        mainLayout.setBottom(bottomContainer);
         mainLayout.setCenter(hexagonsGroup);
-        mainLayout.setLeft(bottomLeftContainer); // Align dice and roll button on the bottom left
-        mainLayout.setRight(bottomRightContainer); // Align back button on the bottom right
-
+       
+        hexagonsGroup.setTranslateY(50);
+        bottomLeftContainer.setTranslateY(-10);
+        bottomRightContainer.setTranslateY(45);
+        
         // StackPane to hold the background and main layout
         StackPane root = new StackPane(bg, mainLayout);
         // Create Scene and show stage
