@@ -20,12 +20,15 @@ public class Hexagon extends Group {
     private double offsetY;
     private double offsetX;
     private Polygon hexagonBorder; // Store a direct reference to the border polygon
+    private int x;
+    private int y;
     
-    
-    public Hexagon(double radius, int number, Resource resource) {
+    public Hexagon(double radius, int number, Resource resource,int x,int y) {
         this.radius = radius;
         this.number = number;
         this.resource = resource;
+       setX(x);
+       setY(y);
 
         // Initialize hexagon and set the resource image
         setResource(resource); // Set the image resource first to make sure it’s in the background
@@ -142,5 +145,22 @@ public class Hexagon extends Group {
     private double calculateApothem() {
         return Math.cos(Math.PI / 6) * radius;
     }
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+    
     
 }

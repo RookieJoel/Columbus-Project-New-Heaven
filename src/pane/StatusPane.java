@@ -1,4 +1,4 @@
-package view;
+package pane;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -40,6 +40,8 @@ public class StatusPane extends VBox {
 
         // Add all elements to VBox
         this.getChildren().addAll(nameLabel, hpLabel, resourceBox);
+        
+        this.setTranslateY(40);
     }
 
     // Update HP
@@ -58,4 +60,6 @@ public class StatusPane extends VBox {
             resourceBox.getChildren().add(resourceLabel);
         });
     }
+    
+    
 }
