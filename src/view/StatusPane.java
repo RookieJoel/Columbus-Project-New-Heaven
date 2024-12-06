@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import player.Player;
 
 public class StatusPane extends VBox {
@@ -18,18 +19,20 @@ public class StatusPane extends VBox {
         this.setAlignment(Pos.TOP_CENTER);
 
         // Load the custom font
-        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/KnightWarrior-w16n8.otf"), 30);
+        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/KnightWarrior-w16n8.otf"), 50);
 
 
         // Player name
-        Label nameLabel = new Label(player.getName());
+        Text nameLabel = new Text(player.getName());
         nameLabel.setFont(customFont);
-        nameLabel.setTextFill(Color.WHITESMOKE); // Set text color to whitesmoke
+        nameLabel.setFill(Color.RED); // Set text color to whitesmoke
+       
+        
 
         // HP
         hpLabel = new Label("HP: " + player.getHp());
         hpLabel.setFont(customFont);
-        hpLabel.setTextFill(Color.WHITESMOKE); // Set text color to whitesmoke
+        hpLabel.setTextFill(Color.LIMEGREEN); // Set text color to whitesmoke
 
         // Resources display
         resourceBox = new VBox(5); // Spacing between resources
@@ -47,7 +50,7 @@ public class StatusPane extends VBox {
     // Update Resources from Player's inventory
     public void updateResources(Player player) {
         resourceBox.getChildren().clear();
-        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/KnightWarrior-w16n8.otf"), 20); // Smaller font for resources
+        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/KnightWarrior-w16n8.otf"), 30); // Smaller font for resources
         player.getInventory().getResources().forEach((resource, amount) -> {
             Label resourceLabel = new Label(resource + ": " + amount);
             resourceLabel.setFont(customFont);

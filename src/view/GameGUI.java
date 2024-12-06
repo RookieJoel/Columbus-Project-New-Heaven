@@ -38,13 +38,13 @@ public class GameGUI extends Application {
     private final Random random = new Random();
     private List<Integer> uniqueNumbers;
     private List<Hexagon> hexagons;
-    private final int GAPX = 10;
-    private final int GAPY = 5;
+    private final static int GAPX = 10;
+    private final static int GAPY = 5;
+    private final static int HexagonRadius = 100;
 
     @Override
     public void start(Stage stage) {
-        double HexagonRadius = 95;
-
+    	
         // Load the dice rolling sound effect
         String audioPath = ClassLoader.getSystemResource("sounds/DrumRoll.mp3").toString();
         AudioClip diceSound = new AudioClip(audioPath);
@@ -115,15 +115,6 @@ public class GameGUI extends Application {
 
         Player player1 = new Player(1, "Player 1", colony1);
         Player player2 = new Player(2, "Player 2", colony2);
-
-     // Add resources for players
-        player1.getInventory().addResource("VIBRANIUM", 5);
-        player1.getInventory().addResource("OIL", 3);
-        player1.getInventory().addResource("COPPER", 2);
-
-        player2.getInventory().addResource("URANIUM", 4);
-        player2.getInventory().addResource("JOJOLIUM", 1);
-        player2.getInventory().addResource("OIL", 2);
 
 
      // Create StatusPane
@@ -203,6 +194,7 @@ public class GameGUI extends Application {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
+        
         HBox bottomContainer = new HBox();
         bottomContainer.setPadding(new Insets(10));
         bottomContainer.setSpacing(20); // Add spacing between left and right sections
@@ -215,8 +207,12 @@ public class GameGUI extends Application {
         mainLayout.setRight(player2Status);
         mainLayout.setBottom(bottomContainer);
         mainLayout.setCenter(hexagonsGroup);
-       
-        hexagonsGroup.setTranslateY(50);
+        
+        //Positioning
+        player1Status.setTranslateY(25);
+        player2Status.setTranslateY(25);
+
+        hexagonsGroup.setTranslateY(80);
         bottomLeftContainer.setTranslateY(-10);
         bottomRightContainer.setTranslateY(45);
         

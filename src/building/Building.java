@@ -1,6 +1,10 @@
 package building;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import board.Hexagon;
+import board.Resource;
 
 public abstract class Building {
 	 	private final String id; // Identifier based on hash of tile number and type
@@ -9,20 +13,16 @@ public abstract class Building {
 	    private int prosperityPoints; // Points the building contributes to the player
 	    private Hexagon position; // Hexagon where the building is constructed
 	    private boolean isDestroyed; // Indicates if the building has been destroyed
+	    private Map<Resource,Integer> cost;
 	    
-	    
-	 // Upgrade properties
-	    private int upgradeLevel; // Current upgrade level
-	    private int upgradeCost; // Cost to upgrade
-	    
-	    public Building(String name, int hp, int prosperityPoints, Hexagon position, int maxUpgradeLevel, int initialUpgradeCost) {
+	    public Building(String name, int hp, int prosperityPoints, Hexagon position) {
 	        this.name = name;
 	        this.hp = hp;
 	        this.prosperityPoints = prosperityPoints;
 	        this.position = position;
 	        this.isDestroyed = false;
-	        this.upgradeLevel = 1; // Start at level 1
-	        this.upgradeCost = initialUpgradeCost;
+	        this.cost = new HashMap<>();
+
 
 	        // Generate hash-based ID
 	        this.id = generateId(position, name);
@@ -32,14 +32,6 @@ public abstract class Building {
 	    private String generateId(Hexagon position, String name) {
 	        int tileNumber = position != null ? position.getNumber() : 0;
 	        return name + "-" + Integer.toHexString(tileNumber).toUpperCase();
-	    }
-	    
-	    public int getUpgradeCost() {
-	        return upgradeCost;
-	    }
-
-	    public int getUpgradeLevel() {
-	        return upgradeLevel;
 	    }
 	    
 	    // Getters and setters
@@ -89,5 +81,14 @@ public abstract class Building {
 	    // Utility methods
 	    public void takeDamage(int damage) {
 	        setHp(this.hp - damage); // Reduce HP by the damage taken
+	    }
+	    
+	    public void addCost(Resource resource, int amount) {
+	        cost.put(resource, amount);
+	    }
+
+	    // Get the cost of a building
+	    public Map<Resource, Integer> getCost() {
+	        return cost;
 	    }
 }

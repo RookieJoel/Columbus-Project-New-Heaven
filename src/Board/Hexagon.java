@@ -20,7 +20,8 @@ public class Hexagon extends Group {
     private double offsetY;
     private double offsetX;
     private Polygon hexagonBorder; // Store a direct reference to the border polygon
-
+    
+    
     public Hexagon(double radius, int number, Resource resource) {
         this.radius = radius;
         this.number = number;
@@ -125,6 +126,10 @@ public class Hexagon extends Group {
             stage.setTitle("Resource: " + resource.name());
         });
     }
+    
+    public Resource getResource() {
+        return resource;
+    }
 
     public double getOffsetY() {
         return offsetY;
@@ -137,4 +142,5 @@ public class Hexagon extends Group {
     private double calculateApothem() {
         return Math.cos(Math.PI / 6) * radius;
     }
+    
 }
