@@ -28,7 +28,6 @@ public class StatusPane extends VBox {
         nameLabel.setFill(Color.RED); // Set text color to whitesmoke
        
         
-
         // HP
         hpLabel = new Label("HP: " + player.getHp());
         hpLabel.setFont(customFont);

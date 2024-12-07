@@ -1,5 +1,9 @@
 package player;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import building.Building;
 import building.Colony;
 
 public class Player {
@@ -7,6 +11,7 @@ public class Player {
     private final String name; // Player's name
     private final Inventory inventory; // Player's inventory
     private Colony colony; // Colony owned by the player
+    private List<Building> buildings = new ArrayList<>();
 
     public Player(int id, String name,Colony colony) {
         this.id = id;
@@ -31,12 +36,13 @@ public class Player {
             colony.takeDamage(damage);
         }
     }
+    
+    public List<Building> getBuildings() {
+        return buildings;
+    }
 
-    // Repair HP by repairing the colony
-    public void repair(int amount) {
-        if (colony != null) {
-            colony.setHp(colony.getHp() + amount);
-        }
+    public void addBuilding(Building building) {
+        buildings.add(building);
     }
 
     public Colony getColony() {

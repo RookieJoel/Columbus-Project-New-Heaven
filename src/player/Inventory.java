@@ -38,7 +38,7 @@ public class Inventory {
         return false; 
     }
 
-    public int getResource(String resource) {
+    public int getResource(Resource resource) {
         return resources.getOrDefault(resource, 0);
     }
 }

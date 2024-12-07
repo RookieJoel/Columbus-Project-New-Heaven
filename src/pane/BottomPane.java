@@ -50,6 +50,7 @@ public class BottomPane extends HBox {
                     // Run dice roll and hexagon highlight update on the JavaFX Application Thread
                     Platform.runLater(() -> {
                         dice.roll();
+                        rollButton.setDisable(true);
                         highlightRandomHexagonAction.run(); // Randomly highlight a hexagon
                     });
 
@@ -64,6 +65,8 @@ public class BottomPane extends HBox {
                 // After 1.5 seconds, stop rolling and calculate the result
                 Platform.runLater(() -> {
                     resetHexagonBordersAction.run(); // Reset all hexagon borders
+                    rollButton.setDisable(false);
+
                     int rollResult = dice.roll();
                     int tile1 = rollResult;        // First rolled tile
                     int tile2 = rollResult + 10;  // Second rolled tile

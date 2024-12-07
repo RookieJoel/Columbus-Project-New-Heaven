@@ -1,6 +1,5 @@
 package building;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import board.Hexagon;
@@ -11,8 +10,8 @@ import player.Player;
 
 public class Quarry extends Building implements Upgradable,Produceable{
 
-	public Quarry(Hexagon position) {
-		super("Quarry", 3, 1, position);
+	public Quarry(Hexagon position, Player player) {
+		super("Quarry", 3, 1, position, player);
 		this.addCost(Resource.COPPER, 3);
 		// TODO Auto-generated constructor stub
 	}
@@ -31,10 +30,8 @@ public class Quarry extends Building implements Upgradable,Produceable{
 
 	@Override
 	public Map<Resource, Integer> getUpgradeCost() {
-		Map<Resource,Integer> m = new HashMap<>();
-		m.put(Resource.OIL, 3);
-		return m;
-		
+		Factory factory = new Factory(null, null);
+		return factory.getCost();
 	}
 
 }

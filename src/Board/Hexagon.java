@@ -1,7 +1,9 @@
 package board;
 
+import building.Building;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -16,6 +18,10 @@ public class Hexagon extends Group {
     private double radius;
     private int number;
     private Resource resource;
+    private Building building;
+    private Label buildingLabel;
+    private Runnable onClick;
+
 
     private double offsetY;
     private double offsetX;
@@ -23,12 +29,18 @@ public class Hexagon extends Group {
     private int x;
     private int y;
     
+    
+    public void setOnClick(Runnable onClick) {
+        this.onClick = onClick;
+    }
+    
     public Hexagon(double radius, int number, Resource resource,int x,int y) {
         this.radius = radius;
         this.number = number;
         this.resource = resource;
-       setX(x);
-       setY(y);
+        this.building = null;
+        setX(x);
+        setY(y);
 
         // Initialize hexagon and set the resource image
         setResource(resource); // Set the image resource first to make sure it’s in the background
@@ -41,11 +53,25 @@ public class Hexagon extends Group {
         // Add centered number text
         addCenteredNumberText();
         
+        this.setOnMouseClicked(e -> {
+            if (onClick != null) {
+                onClick.run(); // Trigger the callback if set
+            }
+        });
         // Title change on click
-        changeTitle();
+        
+       
         
     }
-
+    private void addBuildingLebel() {
+    	 buildingLabel = new Label();
+         buildingLabel.setStyle("-fx-font-size: 14; -fx-text-fill: black;");
+         buildingLabel.setVisible(false); // Hidden initially
+         buildingLabel.setAlignment(Pos.CENTER);
+         // Add the label to the hexagon
+         this.getChildren().add(buildingLabel);
+    }
+    
     private void addCenteredNumberText() {
         // Display the number at the center of the hexagon
         Text numberText = new Text(String.valueOf(number));
@@ -123,13 +149,6 @@ public class Hexagon extends Group {
         return number;
     }
 
-    public void changeTitle() {
-        hexagonBorder.setOnMouseClicked(e -> {
-            Stage stage = (Stage) this.getScene().getWindow();
-            stage.setTitle("Resource: " + resource.name());
-        });
-    }
-    
     public Resource getResource() {
         return resource;
     }
@@ -161,6 +180,22 @@ public class Hexagon extends Group {
 	public void setY(int y) {
 		this.y = y;
 	}
+
+	public void setBuilding(Building building) {
+		this.building = building;
+		if (building != null) {
+			addBuildingLebel();
+            buildingLabel.setText(building.getName()); // Assuming getType() returns the building name
+            buildingLabel.setVisible(true);
+            this.highlightBorder();
+        } else {
+            buildingLabel.setText("");
+            buildingLabel.setVisible(false);
+        }
+	}
     
+	public Building getBuilding() {
+		return this.building;
+	}
     
 }

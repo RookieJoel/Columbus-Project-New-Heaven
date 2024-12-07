@@ -2,6 +2,7 @@ package pane;
 
 import board.Hexagon;
 import board.Resource;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class HexagonPane extends Group {
     	uniqueNumbers = generateUniqueNumbers(1, 19);
     	
         Hexagon mainHexagon = new Hexagon(HexagonRadius, 10, Resource.JOJOLIUM, 0, 0);
+        mainHexagon.setOnClick(() -> onHexagonClick(mainHexagon));
         hexagons.add(mainHexagon);
 
         int x = 0;
@@ -40,11 +42,13 @@ public class HexagonPane extends Group {
             Hexagon hexagon = new Hexagon(HexagonRadius, getUniqueNumber(), Resource.randomResource(), x, y);
             hexagon.setTranslateY((mainHexagon.getOffsetY() + GAPY) * y);
             hexagon.setTranslateX((mainHexagon.getOffsetX() + GAPX) * x);
+            hexagon.setOnClick(() -> onHexagonClick(hexagon));
             hexagons.add(hexagon);
 
             Hexagon mirrorHexagon = new Hexagon(HexagonRadius, getUniqueNumber(), Resource.randomResource(), -x, y);
             mirrorHexagon.setTranslateY((mainHexagon.getOffsetY() + GAPY) * y);
             mirrorHexagon.setTranslateX((mainHexagon.getOffsetX() + GAPX) * -x);
+            mirrorHexagon.setOnClick(() -> onHexagonClick(mirrorHexagon));
             hexagons.add(mirrorHexagon);
         }
 
@@ -57,6 +61,7 @@ public class HexagonPane extends Group {
             Hexagon hexagon = new Hexagon(HexagonRadius, getUniqueNumber(), Resource.randomResource(), x, y);
             hexagon.setTranslateY((mainHexagon.getOffsetY() + GAPY) * y);
             hexagon.setTranslateX((mainHexagon.getOffsetX() + GAPX) * x);
+            hexagon.setOnClick(() -> onHexagonClick(hexagon));
             hexagons.add(hexagon);
             n--;
         }
@@ -96,6 +101,13 @@ public class HexagonPane extends Group {
             hexagon.resetBorder();
         }
     }
+    
+    private void onHexagonClick(Hexagon hexagon) {
+        int hexX = hexagon.getX();
+        int hexY = hexagon.getY();
+        System.out.println("Hexagon clicked at position: (" + hexX + ", " + hexY + ")");
+    }
+
 
     public void highlightHexagon(int sum) {
         // Find and highlight the hexagon with the matching number

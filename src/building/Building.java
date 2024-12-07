@@ -5,6 +5,7 @@ import java.util.Map;
 
 import board.Hexagon;
 import board.Resource;
+import player.Player;
 
 public abstract class Building {
 	 	private final String id; // Identifier based on hash of tile number and type
@@ -13,13 +14,15 @@ public abstract class Building {
 	    private int prosperityPoints; // Points the building contributes to the player
 	    private Hexagon position; // Hexagon where the building is constructed
 	    private boolean isDestroyed; // Indicates if the building has been destroyed
+	    private Player player;
 	    private Map<Resource,Integer> cost;
 	    
-	    public Building(String name, int hp, int prosperityPoints, Hexagon position) {
+	    public Building(String name, int hp, int prosperityPoints, Hexagon position,Player player) {
 	        this.name = name;
 	        this.hp = hp;
 	        this.prosperityPoints = prosperityPoints;
 	        this.position = position;
+	        this.player = player;
 	        this.isDestroyed = false;
 	        this.cost = new HashMap<>();
 
@@ -91,4 +94,12 @@ public abstract class Building {
 	    public Map<Resource, Integer> getCost() {
 	        return cost;
 	    }
+
+		public Player getPlayer() {
+			return player;
+		}
+
+		public void setPlayer(Player player) {
+			this.player = player;
+		}
 }

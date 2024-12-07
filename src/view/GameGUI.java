@@ -9,20 +9,26 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pane.ActionPane;
+import pane.BuildActionPane;
 import pane.BottomPane;
 import pane.HexagonPane;
 import pane.StatusPane;
 import player.Player;
-import board.Resource;
 import board.Hexagon;
+import board.Resource;
+import game.GameController;
 
 import java.util.List;
 
 public class GameGUI extends Application {
 
-    private Player currentPlayer; // Current turn player
+    private Player currentPlayer;
     private Player player1;
     private Player player2;
+    private boolean isBuildingMode = false;
+    private BuildActionPane player1BuildPane;
+    private BuildActionPane player2BuildPane;
+
 
     @Override
     public void start(Stage stage) {
@@ -42,12 +48,18 @@ public class GameGUI extends Application {
         StatusPane player1Status = new StatusPane(player1);
         StatusPane player2Status = new StatusPane(player2);
 
-        // Set current player to Player 1 at the start
+        // Set current player to Player 1 initially
         currentPlayer = player1;
+        
 
-        // Create ActionPane
-        ActionPane player1Actions = new ActionPane("Player 1");
-        ActionPane player2Actions = new ActionPane("Player 2");
+        // Create BuildActionPanes for both players
+        player1BuildPane = new BuildActionPane();
+        player2BuildPane = new BuildActionPane();
+
+        // Create ActionPanes for both players
+        ActionPane player1Actions = new ActionPane("Player 1", null, player1BuildPane);
+        ActionPane player2Actions = new ActionPane("Player 2", null, player2BuildPane);
+        
 
         // Create BottomPane
         BottomPane bottomPane = new BottomPane(
@@ -73,6 +85,8 @@ public class GameGUI extends Application {
 
                 // Switch turn to the other player
                 switchTurn();
+                player1Actions.setVisible(currentPlayer == player1);
+                player2Actions.setVisible(currentPlayer == player2);
             },
             // Open main menu
             () -> {
@@ -88,17 +102,20 @@ public class GameGUI extends Application {
         );
 
         // Layout
+        VBox leftPane = new VBox(10, player1Status, player1Actions, player1BuildPane);
+        VBox rightPane = new VBox(10, player2Status, player2Actions, player2BuildPane);
+
         BorderPane mainLayout = new BorderPane();
-        mainLayout.setLeft(new VBox(10, player1Status, player1Actions));
-        mainLayout.setRight(new VBox(10, player2Status, player2Actions));
+        mainLayout.setLeft(leftPane);
+        mainLayout.setRight(rightPane);
         mainLayout.setCenter(hexagonPane);
         mainLayout.setBottom(bottomPane);
 
         // StackPane to hold the background and main layout
         StackPane root = new StackPane(bg, mainLayout);
-        
+
         // Create Scene and show stage
-        var scene = new Scene(root);
+        Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Columbus Project");
         stage.setFullScreen(true);
@@ -117,7 +134,10 @@ public class GameGUI extends Application {
 
     // Switch turn between Player 1 and Player 2
     private void switchTurn() {
+        // Update currentPlayer
         currentPlayer = (currentPlayer == player1) ? player2 : player1;
+
+
     }
 
     public static void main(String[] args) {
