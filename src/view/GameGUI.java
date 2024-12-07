@@ -9,6 +9,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pane.ActionPane;
+import pane.AlchemizePane;
 import pane.BuildActionPane;
 import pane.BottomPane;
 import pane.HexagonPane;
@@ -17,7 +18,6 @@ import player.Player;
 import board.Hexagon;
 import board.Resource;
 import building.Colony;
-import building.MissileFortress;
 import game.GameController;
 
 import java.util.List;
@@ -29,7 +29,6 @@ public class GameGUI extends Application {
     private Player player2;
     private BuildActionPane player1BuildPane;
     private BuildActionPane player2BuildPane;
-
 
     @Override
     public void start(Stage stage) {
@@ -43,62 +42,66 @@ public class GameGUI extends Application {
         // Create HexagonPane
         HexagonPane hexagonPane = new HexagonPane();
 
+        // Create Players and StatusPane
         Hexagon leftmostHexagon = hexagonPane.getLeftmostHexagon();
         Hexagon rightmostHexagon = hexagonPane.getRightmostHexagon();
 
-        // Create Players and StatusPane
-        Colony colony1 = new Colony(leftmostHexagon, player1); // Assign to leftmost tile
-        Colony colony2 = new Colony(rightmostHexagon, player2); // Assign to rightmost tile
-        
+        player1 = new Player(1, "Player 1", null);
+        player2 = new Player(2, "Player 2", null);
+
+        Colony colony1 = new Colony(leftmostHexagon, player1);
+        Colony colony2 = new Colony(rightmostHexagon, player2);
+
         leftmostHexagon.setBuilding(colony1);
         rightmostHexagon.setBuilding(colony2);
-        
-        player1 = new Player(1, "Player 1", colony1);
-        player2 = new Player(2, "Player 2", colony2);
+
+        player1.setColony(colony1);
+        player2.setColony(colony2);
+
         StatusPane player1Status = new StatusPane(player1);
         StatusPane player2Status = new StatusPane(player2);
 
         // Set current player to Player 1 initially
         currentPlayer = player1;
-        
 
-        // Create BuildActionPanes for both players
+        // Initialize BuildActionPanes for both players
         player1BuildPane = new BuildActionPane();
         player2BuildPane = new BuildActionPane();
 
+     // Create AlchemizePane with a callback to update the StatusPane
+        AlchemizePane alchemizePane = new AlchemizePane(currentPlayer, () -> {
+            if (currentPlayer == player1) {
+                player1Status.updateResources(currentPlayer);
+            } else {
+                player2Status.updateResources(currentPlayer);
+            }
+        });
+
+
+
         // Create ActionPanes for both players
-        ActionPane player1Actions = new ActionPane("Player 1", null, player1BuildPane);
-        ActionPane player2Actions = new ActionPane("Player 2", null, player2BuildPane);
-        
+        ActionPane player1Actions = new ActionPane("Player 1", null, player1BuildPane, alchemizePane);
+        ActionPane player2Actions = new ActionPane("Player 2", null, player2BuildPane, alchemizePane);
 
         // Create BottomPane
         BottomPane bottomPane = new BottomPane(
-            // Highlight random hexagon
             () -> hexagonPane.highlightRandomHexagon(),
-            // Reset hexagon borders
             () -> hexagonPane.resetHexagonBorders(),
-            // Highlight final hexagons and update resources
             (tile1, tile2) -> {
-                // Highlight the two tiles
                 hexagonPane.highlightHexagon(tile1);
                 hexagonPane.highlightHexagon(tile2);
-
-                // Add resources from these tiles to the currentPlayer
                 addResourcesToPlayer(hexagonPane.getHexagons(), tile1, tile2);
-
-                // Update StatusPane for the current player
                 if (currentPlayer == player1) {
                     player1Status.updateResources(currentPlayer);
                 } else {
                     player2Status.updateResources(currentPlayer);
                 }
-
-                // Switch turn to the other player
                 switchTurn();
                 player1Actions.setVisible(currentPlayer == player1);
                 player2Actions.setVisible(currentPlayer == player2);
+                alchemizePane.updateCurrentPlayer(currentPlayer);
+
             },
-            // Open main menu
             () -> {
                 MainMenu mainMenu = new MainMenu();
                 Stage mainStage = new Stage();
@@ -121,8 +124,8 @@ public class GameGUI extends Application {
         mainLayout.setCenter(hexagonPane);
         mainLayout.setBottom(bottomPane);
 
-        // StackPane to hold the background and main layout
-        StackPane root = new StackPane(bg, mainLayout);
+        // Add AlchemizePane to the root layout
+        StackPane root = new StackPane(bg, mainLayout, alchemizePane);
 
         // Create Scene and show stage
         Scene scene = new Scene(root);
@@ -146,11 +149,11 @@ public class GameGUI extends Application {
     private void switchTurn() {
         // Update currentPlayer
         currentPlayer = (currentPlayer == player1) ? player2 : player1;
-
-
     }
 
     public static void main(String[] args) {
         launch();
     }
+    
+    
 }
