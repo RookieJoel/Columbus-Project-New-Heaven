@@ -1,6 +1,7 @@
 package building;
 
 import java.util.HashMap;
+import javafx.scene.Node;
 import java.util.Map;
 
 import board.Hexagon;
@@ -102,4 +103,6 @@ public abstract class Building {
 		public void setPlayer(Player player) {
 			this.player = player;
 		}
+		
+		public abstract Node createShape(double radius);
 }

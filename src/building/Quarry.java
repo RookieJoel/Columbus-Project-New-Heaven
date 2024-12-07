@@ -6,6 +6,9 @@ import board.Hexagon;
 import board.Resource;
 import building.interfaces.Produceable;
 import building.interfaces.Upgradable;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import player.Player;
 
 public class Quarry extends Building implements Upgradable,Produceable{
@@ -34,4 +37,20 @@ public class Quarry extends Building implements Upgradable,Produceable{
 		return factory.getCost();
 	}
 
+	@Override
+	public Node createShape(double radius) {
+		 Polygon triangle = new Polygon();
+	        double size = radius * 0.4;
+	        triangle.getPoints().addAll(
+	            0.0, -size,  // Top point
+	            -size, size, // Bottom-left
+	            size, size   // Bottom-right
+	        );
+	        triangle.setFill(Color.BROWN);
+	        triangle.setStroke(Color.WHITE);
+	        triangle.setStrokeWidth(2);
+	        return triangle;
+	}
 }
+
+

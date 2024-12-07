@@ -108,6 +108,11 @@ public class HexagonPane extends Group {
         System.out.println("Hexagon clicked at position: (" + hexX + ", " + hexY + ")");
     }
 
+    public void setAllHexagonsClickEnabled(boolean enabled) {
+        for (Hexagon hexagon : hexagons) {
+            hexagon.setClickEnabled(enabled);
+        }
+    }
 
     public void highlightHexagon(int sum) {
         // Find and highlight the hexagon with the matching number
@@ -120,15 +125,36 @@ public class HexagonPane extends Group {
     }
     
     public Hexagon getLeftmostHexagon() {
-        return hexagons.stream()
-                .min((h1, h2) -> Integer.compare(h1.getX(), h2.getX()))
-                .orElse(null); // Return null if no hexagons are present
+    	for (Hexagon hexagon : hexagons) {
+            if(hexagon.getX() == 2 && hexagon.getY() == 0) {
+            	return hexagon;
+            }   
+    	}
+    	return null;
     }
 
     public Hexagon getRightmostHexagon() {
-        return hexagons.stream()
-                .max((h1, h2) -> Integer.compare(h1.getX(), h2.getX()))
-                .orElse(null); // Return null if no hexagons are present
+    	for (Hexagon hexagon : hexagons) {
+            if(hexagon.getX() == -2 && hexagon.getY() == 0) {
+            	return hexagon;
+            }   
+    	}
+    	return null;
     }
+    public List<Hexagon> getAdjacentHexagons(Hexagon hex) {
+        List<Hexagon> adjacentHexes = new ArrayList<>();
+        int x = hex.getX();
+        int y = hex.getY();
 
+        for (Hexagon h : hexagons) {
+            if (Math.abs(h.getX() - x) <= 1 && Math.abs(h.getY() - y) <= 2 && !(h.getX() == x && h.getY() == y)) {
+                adjacentHexes.add(h);
+            }
+        }
+        return adjacentHexes;
+    }
+    
+    
+    
+    
 }

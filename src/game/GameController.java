@@ -78,5 +78,41 @@ public class GameController {
         }
     }
     
+    public void handleBuildButtonClicked(BuildActionPane buildActionPane) {
+        buildActionPane.updateButtonStates();
+        buildActionPane.setVisible(true);
+    }
+
+    public void onBuildingSelected(Building selectedBuilding) {
+        // Highlight tiles that can build
+        hexagonPane.resetHexagonBorders();
+
+        for (Hexagon hex : hexagonPane.getHexagons()) {
+            if (canBuildOnTile(hex)) {
+                hex.highlightBorder(); // Highlight valid tiles in green
+                hex.setOnClick(() -> onTileSelected(hex, selectedBuilding)); // Add click action
+            }
+        }
+    }
+
+    private boolean canBuildOnTile(Hexagon hex) {
+        // Check if tile is empty and adjacent to a player's building
+        if (hex.hasBuilding()) return false;
+
+        for (Hexagon adjacentHex : hexagonPane.getAdjacentHexagons(hex)) {
+            if (adjacentHex.getBuilding() != null &&
+                adjacentHex.getBuilding().getPlayer() == builder.getCurrentPlayer()) {
+                return true; // Adjacent to player's building
+            }
+        }
+        return false;
+    }
+
+    private void onTileSelected(Hexagon hex, Building building) {
+        if (builder.attemptBuild(hex, building)) {
+            hex.setBuilding(building);
+            hexagonPane.resetHexagonBorders(); // Clear highlights
+        }
+    }
     
 }

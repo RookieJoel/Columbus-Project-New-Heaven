@@ -3,6 +3,9 @@ package building;
 import board.Hexagon;
 import board.Resource;
 import building.interfaces.Produceable;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import player.Player;
 
 public class Factory extends Building implements Produceable{
@@ -16,6 +19,16 @@ public class Factory extends Building implements Produceable{
 	@Override
 	public void produceResources(Player player) {
 		player.getInventory().addResource(this.getPosition().getResource(), 3);
+	}
+
+	@Override
+	public Node createShape(double radius) {
+		
+		Rectangle rectangle = new Rectangle(radius * 0.4, radius * 0.4); // Rectangle is 40% of hexagon size
+        rectangle.setFill(Color.GREEN);
+        rectangle.setStroke(Color.WHITE);
+        rectangle.setStrokeWidth(2);
+        return rectangle;
 	}
 
 

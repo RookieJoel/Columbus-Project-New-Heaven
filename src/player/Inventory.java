@@ -15,10 +15,10 @@ public class Inventory {
 
     // Initialize all resources to 0
     private void initializeResources() {
-        resources.put(Resource.VIBRANIUM, 0);
+        resources.put(Resource.VIBRANIUM, 1);
         resources.put(Resource.OIL, 0);
-        resources.put(Resource.COPPER, 0);
-        resources.put(Resource.URANIUM, 0);
+        resources.put(Resource.COPPER, 2);
+        resources.put(Resource.URANIUM, 1);
         resources.put(Resource.JOJOLIUM, 0);
     }
 

@@ -3,6 +3,7 @@ package board;
 import building.Building;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,9 +20,9 @@ public class Hexagon extends Group {
     private int number;
     private Resource resource;
     private Building building;
-    private Label buildingLabel;
+    private Node buildingShape;
     private Runnable onClick;
-
+    private boolean clickEnabled = false;
 
     private double offsetY;
     private double offsetX;
@@ -29,10 +30,6 @@ public class Hexagon extends Group {
     private int x;
     private int y;
     
-    
-    public void setOnClick(Runnable onClick) {
-        this.onClick = onClick;
-    }
     
     public Hexagon(double radius, int number, Resource resource,int x,int y) {
         this.radius = radius;
@@ -54,7 +51,7 @@ public class Hexagon extends Group {
         addCenteredNumberText();
         
         this.setOnMouseClicked(e -> {
-            if (onClick != null) {
+            if (clickEnabled && onClick != null) {
                 onClick.run(); // Trigger the callback if set
             }
         });
@@ -62,14 +59,6 @@ public class Hexagon extends Group {
         
        
         
-    }
-    private void addBuildingLebel() {
-    	 buildingLabel = new Label();
-         buildingLabel.setStyle("-fx-font-size: 14; -fx-text-fill: black;");
-         buildingLabel.setVisible(false); // Hidden initially
-         buildingLabel.setAlignment(Pos.CENTER);
-         // Add the label to the hexagon
-         this.getChildren().add(buildingLabel);
     }
     
     private void addCenteredNumberText() {
@@ -136,6 +125,20 @@ public class Hexagon extends Group {
         hexagonBorder.setStrokeWidth(3);
         this.getChildren().add(hexagonBorder); // Add border on top of image
     }
+    
+    public void setOnClick(Runnable onClick) {
+        this.onClick = onClick;
+    }
+    
+    public void setClickEnabled(boolean enabled) {
+        this.clickEnabled = enabled;
+    }
+
+    public boolean isClickEnabled() {
+        return clickEnabled;
+    }
+
+    
 
     public void highlightBorder() {
         hexagonBorder.setStroke(Color.RED);
@@ -182,16 +185,29 @@ public class Hexagon extends Group {
 	}
 
 	public void setBuilding(Building building) {
-		this.building = building;
-		if (building != null) {
-			addBuildingLebel();
-            buildingLabel.setText(building.getName()); // Assuming getType() returns the building name
-            buildingLabel.setVisible(true);
-            this.highlightBorder();
-        } else {
-            buildingLabel.setText("");
-            buildingLabel.setVisible(false);
-        }
+	    if (this.building != null) {
+	        removeBuilding(); // Remove existing building
+	    }
+
+	    this.building = building;
+	    if (building != null) {
+	        this.buildingShape = building.createShape(radius);
+	        buildingShape.setTranslateX(radius); // Center shape on hexagon
+	        buildingShape.setTranslateY(radius);
+	        this.getChildren().add(buildingShape);
+	    }
+	}
+	
+	public void removeBuilding() {
+	    if (buildingShape != null) {
+	        this.getChildren().remove(buildingShape);
+	        buildingShape = null;
+	    }
+	    this.building = null;
+	}
+
+	public boolean hasBuilding() {
+	    return building != null;
 	}
     
 	public Building getBuilding() {

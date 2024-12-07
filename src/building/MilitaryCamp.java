@@ -7,6 +7,9 @@ import board.Hexagon;
 import board.Resource;
 import building.interfaces.Attackable;
 import building.interfaces.Upgradable;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import player.Player;
 
 public class MilitaryCamp extends Building implements Attackable , Upgradable{
@@ -19,6 +22,7 @@ public class MilitaryCamp extends Building implements Attackable , Upgradable{
 		
 		// TODO Auto-generated constructor stub
 	}
+
 
 	@Override
 	public void upgrade() {
@@ -45,6 +49,28 @@ public class MilitaryCamp extends Building implements Attackable , Upgradable{
 
 	public void setAtk(int atk) {
 		this.atk = atk;
+	}
+
+	@Override
+	public Node createShape(double radius) {
+		Polygon star = new Polygon();
+        double outerRadius = radius * 0.4;
+        double innerRadius = radius * 0.2;
+
+        int points = 10; // Star with 10 points (5 outer, 5 inner)
+        for (int i = 0; i < points; i++) {
+            double angle = Math.toRadians((360 / points) * i - 90);
+            double r = (i % 2 == 0) ? outerRadius : innerRadius;
+            star.getPoints().addAll(
+                r * Math.cos(angle), // x
+                r * Math.sin(angle)  // y
+            );
+        }
+
+        star.setFill(Color.DARKBLUE);
+        star.setStroke(Color.WHITE);
+        star.setStrokeWidth(2);
+        return star;
 	}
 
 	@Override
