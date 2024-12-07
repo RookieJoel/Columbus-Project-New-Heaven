@@ -4,6 +4,7 @@ import board.Hexagon;
 import board.Resource;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import player.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -154,6 +155,16 @@ public class HexagonPane extends Group {
         return adjacentHexes;
     }
     
+    // Add resources from highlighted tiles to the current player's inventory
+    public void addResourcesToPlayer(Player currentPlayer, int tile1, int tile2) {
+        for (Hexagon hex : hexagons) {
+            if (hex.getNumber() == tile1 || hex.getNumber() == tile2) {
+                Resource resource = hex.getResource(); // Get the resource of the tile
+                currentPlayer.getInventory().addResource(resource, 1); // Add 1 unit of the resource to the player's inventory
+            }
+        }
+    }
+
     
     
     
