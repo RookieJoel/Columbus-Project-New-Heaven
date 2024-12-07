@@ -16,6 +16,7 @@ import pane.StatusPane;
 import player.Player;
 import board.Hexagon;
 import board.Resource;
+import building.Colony;
 import game.GameController;
 
 import java.util.List;
@@ -29,7 +30,6 @@ public class GameGUI extends Application {
     private BuildActionPane player1BuildPane;
     private BuildActionPane player2BuildPane;
 
-
     @Override
     public void start(Stage stage) {
         // Background Image
@@ -41,25 +41,31 @@ public class GameGUI extends Application {
 
         // Create HexagonPane
         HexagonPane hexagonPane = new HexagonPane();
+        
+     // Get leftmost and rightmost tiles
+        Hexagon leftmostHexagon = hexagonPane.getLeftmostHexagon();
+        Hexagon rightmostHexagon = hexagonPane.getRightmostHexagon();
 
         // Create Players and StatusPane
-        player1 = new Player(1, "Player 1", null);
-        player2 = new Player(2, "Player 2", null);
+        Colony colony1 = new Colony(leftmostHexagon, player1); // Assign to leftmost tile
+        Colony colony2 = new Colony(rightmostHexagon, player2); // Assign to rightmost tile
+        
+        player1 = new Player(1, "Player 1", colony1);
+        player2 = new Player(2, "Player 2", colony2);
+
         StatusPane player1Status = new StatusPane(player1);
         StatusPane player2Status = new StatusPane(player2);
 
         // Set current player to Player 1 initially
         currentPlayer = player1;
-        
 
-        // Create BuildActionPanes for both players
-        player1BuildPane = new BuildActionPane();
-        player2BuildPane = new BuildActionPane();
+        // Correctly initialize BuildActionPanes for both players
+        player1BuildPane = new BuildActionPane(player1, hexagonPane.getHexagons());
+        player2BuildPane = new BuildActionPane(player2, hexagonPane.getHexagons());
 
         // Create ActionPanes for both players
         ActionPane player1Actions = new ActionPane("Player 1", null, player1BuildPane);
         ActionPane player2Actions = new ActionPane("Player 2", null, player2BuildPane);
-        
 
         // Create BottomPane
         BottomPane bottomPane = new BottomPane(
@@ -134,13 +140,11 @@ public class GameGUI extends Application {
 
     // Switch turn between Player 1 and Player 2
     private void switchTurn() {
-        // Update currentPlayer
         currentPlayer = (currentPlayer == player1) ? player2 : player1;
-
-
     }
 
     public static void main(String[] args) {
         launch();
     }
 }
+

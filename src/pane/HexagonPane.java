@@ -118,4 +118,17 @@ public class HexagonPane extends Group {
             }
         }
     }
+    
+    public Hexagon getLeftmostHexagon() {
+        return hexagons.stream()
+                .min((h1, h2) -> Integer.compare(h1.getX(), h2.getX()))
+                .orElse(null); // Return null if no hexagons are present
+    }
+
+    public Hexagon getRightmostHexagon() {
+        return hexagons.stream()
+                .max((h1, h2) -> Integer.compare(h1.getX(), h2.getX()))
+                .orElse(null); // Return null if no hexagons are present
+    }
+
 }

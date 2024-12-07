@@ -30,13 +30,27 @@ public class Inventory {
         resources.put(resource, resources.getOrDefault(resource, 0) + amount);
     }
 
-    public boolean removeResource(Resource resource, int amount) {
-        if (resources.getOrDefault(resource, 0) >= amount) {
-            resources.put(resource, resources.get(resource) - amount);
-            return true;
+    public boolean removeResources(Map<Resource, Integer> cost) {
+        // Check if the player has enough resources for all the required amounts
+        for (Map.Entry<Resource, Integer> entry : cost.entrySet()) {
+            Resource resource = entry.getKey();
+            int amountRequired = entry.getValue();
+
+            if (getResource(resource) < amountRequired) {
+                return false; // Not enough resources
+            }
         }
-        return false; 
+
+        // Deduct the resources after confirming availability
+        for (Map.Entry<Resource, Integer> entry : cost.entrySet()) {
+            Resource resource = entry.getKey();
+            int amountRequired = entry.getValue();
+            resources.put(resource, resources.get(resource) - amountRequired);
+        }
+
+        return true;
     }
+
 
     public int getResource(Resource resource) {
         return resources.getOrDefault(resource, 0);
