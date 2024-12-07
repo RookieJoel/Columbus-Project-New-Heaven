@@ -37,23 +37,37 @@ public class AlchemizePane extends VBox {
         fromResource = new ComboBox<>();
         fromResource.getItems().addAll(Resource.values());
         fromResource.setPromptText("Give Resource");
+        fromResource.setMaxWidth(150);
+        fromResource.setPrefHeight(50);
+
 
         toResource = new ComboBox<>();
         toResource.getItems().addAll(Resource.values());
         toResource.setPromptText("Receive Resource");
+        toResource.setMaxWidth(150);
+        toResource.setPrefHeight(50);
+
 
         // Input for the amount
         amountField = new TextField();
         amountField.setPromptText("Amount to exchange");
+        amountField.setMaxWidth(150);
+        amountField.setPrefHeight(50);
 
+        
         // Button for confirming the alchemy
         alchemizeButton = new Button("Alchemize");
         alchemizeButton.setOnAction(e -> handleAlchemize());
+        alchemizeButton.setPrefHeight(50);
+        alchemizeButton.setPrefWidth(100);
 
         // Close button
         closeButton = new Button("Close");
         closeButton.setOnAction(e -> this.setVisible(false)); // Hide the pane when clicked
+        closeButton.setPrefHeight(50);
+        closeButton.setPrefWidth(100);
 
+        
         // Feedback label
         feedbackLabel = new Label();
         feedbackLabel.setStyle("-fx-text-fill: lime;");

@@ -69,11 +69,6 @@ public class ActionPane extends VBox {
         }
     }
 
-
-
-
-
-
     private void hideBuildPane() {
         // Hide BuildActionPane when other buttons are clicked
         buildActionPane.setVisible(false);
