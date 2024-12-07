@@ -16,6 +16,7 @@ public class BuildActionPane extends VBox {
         super(10); // Spacing between buttons
         this.setPadding(new Insets(10));
         this.setAlignment(Pos.CENTER);
+        this.setTranslateY(20);
 
         // Initialize buttons
         factoryButton = new Button("Factory");
@@ -34,6 +35,7 @@ public class BuildActionPane extends VBox {
 
         // Initially hidden
         this.setVisible(false);
+        
     }
 
     // Getter methods for the buttons to attach action handlers

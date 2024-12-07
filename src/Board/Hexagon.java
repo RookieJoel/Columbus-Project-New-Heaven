@@ -55,10 +55,7 @@ public class Hexagon extends Group {
                 onClick.run(); // Trigger the callback if set
             }
         });
-        // Title change on click
-        
-       
-        
+
     }
     
     private void addCenteredNumberText() {

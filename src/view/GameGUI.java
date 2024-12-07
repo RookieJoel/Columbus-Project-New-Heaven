@@ -48,6 +48,7 @@ public class GameGUI extends Application {
 
         Colony colony1 = new Colony(leftmostHexagon, player1);
         Colony colony2 = new Colony(rightmostHexagon, player2);
+        
 
         leftmostHexagon.setBuilding(colony1);
         rightmostHexagon.setBuilding(colony2);
@@ -67,9 +68,12 @@ public class GameGUI extends Application {
                 player2Status.updateResources(player2);
             }
         });
+        
+        BuildActionPane buildPane1 = new BuildActionPane();
+        BuildActionPane buildPane2 = new BuildActionPane();
 
-        ActionPane player1Actions = new ActionPane("Player 1", null, new BuildActionPane(), alchemizePane);
-        ActionPane player2Actions = new ActionPane("Player 2", null, new BuildActionPane(), alchemizePane);
+        ActionPane player1Actions = new ActionPane("Player 1", null, buildPane1, alchemizePane);
+        ActionPane player2Actions = new ActionPane("Player 2", null, buildPane2, alchemizePane);
 
         // Create BottomPane
         BottomPane bottomPane = new BottomPane(
@@ -100,8 +104,8 @@ public class GameGUI extends Application {
         );
 
         // Layout
-        VBox leftPane = new VBox(10, player1Status, player1Actions);
-        VBox rightPane = new VBox(10, player2Status, player2Actions);
+        VBox leftPane = new VBox(10, player1Status, player1Actions,buildPane1);
+        VBox rightPane = new VBox(10, player2Status, player2Actions,buildPane2);
 
         BorderPane mainLayout = new BorderPane();
         mainLayout.setLeft(leftPane);
