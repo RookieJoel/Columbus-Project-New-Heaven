@@ -54,10 +54,15 @@ public class ActionPane extends VBox {
     }
     
     private void onAttackButtonClicked() {
-    	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),GameController.getInstance().getHexagonPane(),null);
-    	GameController.getInstance().getHexagonPane().setAttackingState(1);
-    	attack.showAttackableBuilding();
-    	
+        if (GameController.getInstance().isTurnActionCompleted()) {
+            System.out.println("You cannot perform another action this turn!");
+            return;
+        }
+
+        Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),
+                                    GameController.getInstance().getHexagonPane(),
+                                    null);
+        attack.showAttackableBuilding();
     }
 
     private void onBuildButtonClicked() {
@@ -93,8 +98,6 @@ public class ActionPane extends VBox {
 
 
     private void onAlchemizeButtonClicked() {
-        System.out.println("Alchemize button clicked.");
-
         if (GameController.getInstance().isTurnActionCompleted()) {
             System.out.println("You cannot perform another action this turn!");
             return;
@@ -102,25 +105,11 @@ public class ActionPane extends VBox {
 
         // Toggle visibility of AlchemizePane
         boolean isCurrentlyVisible = alchemizePane.isVisible();
-        if (!isCurrentlyVisible) {
-            alchemizePane.resetFields(); // Reset fields before showing the pane
-            alchemizePane.clearFeedback(); // Ensure feedback is cleared
-        }
         alchemizePane.setVisible(!isCurrentlyVisible);
 
-        // Hide other panes when AlchemizePane is shown
         if (!isCurrentlyVisible) {
-            buildActionPane.setVisible(false);
-        }
-
-        // Assuming the Alchemize action succeeds immediately for now:
-        boolean alchemizeSuccess = true; // Replace with actual logic for alchemizing
-
-        if (alchemizeSuccess) {
-            System.out.println("Alchemize action successful. Disabling all buttons.");
-            GameController.getInstance().markActionCompleted();
-        } else {
-            System.out.println("Alchemize action failed.");
+            alchemizePane.resetFields();
+            alchemizePane.clearFeedback();
         }
     }
 
@@ -146,12 +135,6 @@ public class ActionPane extends VBox {
 
     public void enableBuildButton() {
         buildButton.setDisable(false);
-    }
-
-
-    private void hideBuildPane() {
-        // Hide BuildActionPane when other buttons are clicked
-        buildActionPane.setVisible(false);
     }
 
     public Button getBuildButton() {

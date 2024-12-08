@@ -1,17 +1,12 @@
 package building;
 
-import java.util.Map;
-
 import board.Hexagon;
 import board.Resource;
 import building.interfaces.Produceable;
-import building.interfaces.Upgradable;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import player.Player;
 
-public class Quarry extends Building implements Upgradable,Produceable{
+public class Quarry extends Building implements Produceable{
 
 	public Quarry(Hexagon position, Player player) {
 		super("Quarry", 3, 1, position, player);
@@ -30,33 +25,12 @@ public class Quarry extends Building implements Upgradable,Produceable{
 	    }
 	}
 
-
-
-	@Override
-	public void upgrade() {
-		 
-	}
-
-	@Override
-	public Map<Resource, Integer> getUpgradeCost() {
-		Factory factory = new Factory(null, null);
-		return factory.getCost();
-	}
-
 	@Override
 	public Node createShape(double radius) {
-		 Polygon triangle = new Polygon();
-	        double size = radius * 0.4;
-	        triangle.getPoints().addAll(
-	            0.0, -size,  // Top point
-	            -size, size, // Bottom-left
-	            size, size   // Bottom-right
-	        );
-	        triangle.setFill(getPlayerColor());
-	        triangle.setStroke(Color.WHITE);
-	        triangle.setStrokeWidth(2);
-	        return triangle;
+	    return createHexagonalShape(radius, "/images/quarry.png");
+
 	}
+
 }
 
 

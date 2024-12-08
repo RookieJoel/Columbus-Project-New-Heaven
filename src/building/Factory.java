@@ -4,8 +4,7 @@ import board.Hexagon;
 import board.Resource;
 import building.interfaces.Produceable;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+
 import player.Player;
 
 public class Factory extends Building implements Produceable{
@@ -21,15 +20,12 @@ public class Factory extends Building implements Produceable{
 		player.getInventory().addResource(this.getPosition().getResource(), 3);
 	}
 
-	@Override
-	public Node createShape(double radius) {
-		
-		Rectangle rectangle = new Rectangle(radius * 0.4, radius * 0.4); // Rectangle is 40% of hexagon size
-        rectangle.setFill(getPlayerColor());
-        rectangle.setStroke(Color.WHITE);
-        rectangle.setStrokeWidth(2);
-        return rectangle;
-	}
+	  @Override
+	    public Node createShape(double radius) {
+		    return createHexagonalShape(radius, "/images/factory.png");
+
+	    }
+
 
 
 }

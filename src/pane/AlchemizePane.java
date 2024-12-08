@@ -1,6 +1,7 @@
 package pane;
 
 import board.Resource;
+import game.GameController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -118,15 +119,12 @@ public class AlchemizePane extends VBox {
             currentPlayer.getInventory().addResource(to, amountToReceive);
 
             feedbackLabel.setText("Successfully exchanged " + cost + " " + from + " for " + amountToReceive + " " + to + ".");
-
-            // Update StatusPane via callback
-            if (onUpdateStatusPane != null) {
-                onUpdateStatusPane.run();
-            }
+            GameController.getInstance().markActionCompleted(); // Mark action as completed
         } catch (NumberFormatException ex) {
             feedbackLabel.setText("Amount must be a valid number.");
         }
     }
+
 
 
     private int calculateExchangeCost(Resource from, Resource to, int amountToReceive) {

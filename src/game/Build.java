@@ -1,13 +1,10 @@
 package game;
 
-import java.util.List;
 import java.util.Map;
 
 import board.Hexagon;
 import board.Resource;
 import building.Building;
-import building.Colony;
-import building.interfaces.Upgradable;
 import pane.HexagonPane;
 import pane.StatusPane;
 import player.Player;

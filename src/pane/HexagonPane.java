@@ -26,7 +26,7 @@ public class HexagonPane extends Group {
     private Hexagon seletedHexagon;
     
     private Hexagon attackerHex;
-    private int atackingState = 0;
+    private int attackingState = 0;
 
     public HexagonPane() {
         createHexagons();
@@ -117,7 +117,7 @@ public class HexagonPane extends Group {
         int hexX = hexagon.getX();
         int hexY = hexagon.getY();
         seletedHexagon = hexagon;
-        if(atackingState == 1) {
+        if(attackingState == 1) {
         	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),
                     GameController.getInstance().getHexagonPane(),
                     null);
@@ -125,12 +125,9 @@ public class HexagonPane extends Group {
         	 attack.showTarketBuilding();
         	 return;
         }
-        if(atackingState == 2) {
-        	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),
-                    GameController.getInstance().getHexagonPane(),
-                    null);
+        if(attackingState == 2) {
         	((Attackable) attackerHex.getBuilding()).attack(seletedHexagon.getBuilding());
-        	atackingState = 0;
+        	attackingState = 0;
         	this.resetHexagonBorders();
         	this.setAllHexagonsClickEnabled(false);
         	return;
@@ -205,7 +202,7 @@ public class HexagonPane extends Group {
 	}
 	
 	 public void setAttackingState(int atackingState) {
-			this.atackingState = atackingState;
+			this.attackingState = atackingState;
 		}
 
     

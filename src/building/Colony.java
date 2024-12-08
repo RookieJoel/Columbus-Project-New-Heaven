@@ -2,8 +2,6 @@ package building;
 
 import board.Hexagon;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import player.Player;
 
 public class Colony extends Building{
@@ -14,11 +12,8 @@ public class Colony extends Building{
 
 	@Override
 	public Node createShape(double radius) {
-		Circle circle = new Circle(radius * 0.3); // Circle is 20% of hexagon size
-        circle.setFill(getPlayerColor());
-        circle.setStroke(Color.WHITE);
-        circle.setStrokeWidth(2);
-        return circle;
+	    return createHexagonalShape(radius, "/images/colony.png");
 	}
+
 	
 }

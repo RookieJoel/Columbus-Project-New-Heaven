@@ -1,13 +1,26 @@
 package building;
 
 import java.util.HashMap;
+
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.Map;
 
 import board.Hexagon;
 import board.Resource;
+import game.GameController;
 import player.Player;
 
 public abstract class Building {
@@ -19,6 +32,7 @@ public abstract class Building {
 	    private boolean isDestroyed; // Indicates if the building has been destroyed
 	    private Player player;
 	    private Map<Resource,Integer> cost;
+	    private Text hpText; // Text to display HP
 	    
 	    public Building(String name, int hp, int prosperityPoints, Hexagon position,Player player) {
 	        this.name = name;
@@ -29,9 +43,18 @@ public abstract class Building {
 	        this.isDestroyed = false;
 	        this.cost = new HashMap<>();
 
-
+	        initializeHpText();
+	        
 	        // Generate hash-based ID
 	        this.id = generateId(position, name);
+	    }
+	    
+	    private void initializeHpText() {
+	        hpText = new Text(String.valueOf(hp));
+	        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/Steelar-j9Vnj.otf"), 30); 
+		    hpText.setFont(customFont); 
+		    hpText.setFill(Color.WHITESMOKE);
+		    
 	    }
 
 	    // Generate a hash ID based on the tile number and building name
@@ -54,10 +77,11 @@ public abstract class Building {
 	    }
 
 	    public void setHp(int hp) {
-	        this.hp = Math.max(0, hp); // Ensure HP is non-negative
+	        this.hp = Math.max(0, hp);
 	        if (this.hp == 0) {
 	            this.isDestroyed = true;
 	        }
+	        updateHpDisplay();
 	    }
 
 	    public int getProsperityPoints() {
@@ -89,9 +113,29 @@ public abstract class Building {
 
 	    // Utility methods
 	    public void takeDamage(int damage) {
-	        setHp(this.hp - damage); // Reduce HP by the damage taken
+	        this.hp = Math.max(0, this.hp - damage); // Reduce HP, ensure it doesn’t go below 0
+	        if (this.hp == 0) {
+	            this.isDestroyed = true;
+	        }
+	        updateHpDisplay();
+
+	        // Notify GameController if this is a Colony
+	        if (this instanceof Colony) {
+	            Player owner = this.getPlayer();
+	            if (owner != null) {
+	                GameController.getInstance()
+	                    .getStatusPaneForPlayer(owner)
+	                    .updateHp(this.getHp());
+	            }
+	        }
 	    }
-	    
+
+
+	    private void updateHpDisplay() {
+	        if (hpText != null) {
+	            hpText.setText(String.valueOf(hp));
+	        }
+	    }
 	    public void addCost(Resource resource, int amount) {
 	        cost.put(resource, amount);
 	    }
@@ -116,5 +160,56 @@ public abstract class Building {
 	        return player.getId() == 1 ? Color.BLUE : Color.GREEN; // Blue for Player 1, Green for Player 2
 	    }
 		
+		
+		public Text getHpText() {
+			return hpText;
+		}
+
+		public void setHpText(Text hpText) {
+			this.hpText = hpText;
+		}
+
 		public abstract Node createShape(double radius);
+		
+		protected Node createHexagonalShape(double radius, String imagePath) {
+		    // Scale down for visibility of resource tile
+		    double scale = 0.8; // Scale factor for smaller size
+
+		    // Outer hexagon
+		    Polygon hexagon = new Polygon();
+		    for (int i = 0; i < 6; i++) {
+		        double angle = Math.toRadians(60 * i);
+		        double x = radius * scale * Math.cos(angle);
+		        double y = radius * scale * Math.sin(angle);
+		        hexagon.getPoints().addAll(x, y);
+		    }
+		    hexagon.setFill(getPlayerColor());
+		    hexagon.setStroke(Color.BLACK);
+		    hexagon.setStrokeWidth(1.5); // Thinner stroke for smaller size
+
+		    // Inner hexagon for the image
+		    Polygon innerHexagon = new Polygon();
+		    double innerRadius = radius * scale * 0.9; // Slightly smaller for the inner hexagon
+		    for (int i = 0; i < 6; i++) {
+		        double angle = Math.toRadians(60 * i);
+		        double x = innerRadius * Math.cos(angle);
+		        double y = innerRadius * Math.sin(angle);
+		        innerHexagon.getPoints().addAll(x, y);
+		    }
+
+		    // Load and set the image
+		    Image image = new Image(getClass().getResourceAsStream(imagePath));
+		    innerHexagon.setFill(new ImagePattern(image));
+
+		    // Position the HP text
+		    Text hpText = getHpText();
+		    hpText.setTranslateX(-radius * scale * 0.3); // Adjust position based on scaled radius
+		    hpText.setTranslateY(radius * scale * 0.9);  // Position below the scaled hexagon
+
+		    // Group the hexagon shape, inner hexagon, and HP text
+		    return new Group(hexagon, innerHexagon, hpText);
+		}
+
+	
+
 }

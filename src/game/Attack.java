@@ -15,6 +15,7 @@ public class Attack {
     private HexagonPane hexagonPane;
     private StatusPane statusPane;
     public static boolean attackMode = false;
+    private Dice dice; // Add a Dice instance
     
     public Attack(Player player, HexagonPane hexagonPane,StatusPane statusPane) {
         this.currentPlayer = player;
@@ -56,7 +57,8 @@ public class Attack {
     		}
     	}
     }
-    public void submitAttack() {
-    	
-    }
+    
+
+    
+
 }

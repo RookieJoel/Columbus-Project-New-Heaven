@@ -1,18 +1,15 @@
 package building;
 
 
-import java.util.Map;
 
 import board.Hexagon;
 import board.Resource;
 import building.interfaces.Attackable;
-import building.interfaces.Upgradable;
+import game.GameController;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import player.Player;
 
-public class MilitaryCamp extends Building implements Attackable , Upgradable{
+public class MilitaryCamp extends Building implements Attackable{
 	private int atk;
 		
 	public MilitaryCamp(Hexagon position, Player player) {
@@ -25,27 +22,25 @@ public class MilitaryCamp extends Building implements Attackable , Upgradable{
 
 
 	@Override
-	public void upgrade() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public Map<Resource, Integer> getUpgradeCost() {
-		MissileFortress missileFortress = new MissileFortress(null, null);
-		
-		// TODO Auto-generated method stub
-		return missileFortress.getCost();
-	}
-
-	@Override
 	public void attack(Building target) {
-		target.takeDamage(atk);
-		if(target.isDestroyed()) {
-			target.getPosition().setBuilding(null);
-		}
-		// TODO Auto-generated method stub
-		
+	    if (target != null) {
+	        target.takeDamage(atk); // Deal damage to the target
+	        if (target instanceof Colony) {
+	            // If the target is a Colony, update its owner's StatusPane
+	            Player owner = target.getPlayer();
+	            if (owner != null) {
+	                GameController.getInstance()
+	                    .getStatusPaneForPlayer(owner)
+	                    .updateHp(target.getHp()); // Sync HP with the Colony's HP
+	            }
+	        }
+	        if (target.isDestroyed()) {
+	            target.getPosition().setBuilding(null); // Remove the building from the board
+	        }
+	    }
 	}
+
+
 
 	public int getAtk() {
 		return atk;
@@ -57,24 +52,8 @@ public class MilitaryCamp extends Building implements Attackable , Upgradable{
 
 	@Override
 	public Node createShape(double radius) {
-		Polygon star = new Polygon();
-        double outerRadius = radius * 0.4;
-        double innerRadius = radius * 0.2;
+	    return createHexagonalShape(radius, "/images/MilitaryCamp.png");
 
-        int points = 10; // Star with 10 points (5 outer, 5 inner)
-        for (int i = 0; i < points; i++) {
-            double angle = Math.toRadians((360 / points) * i - 90);
-            double r = (i % 2 == 0) ? outerRadius : innerRadius;
-            star.getPoints().addAll(
-                r * Math.cos(angle), // x
-                r * Math.sin(angle)  // y
-            );
-        }
-
-        star.setFill(getPlayerColor());
-        star.setStroke(Color.WHITE);
-        star.setStrokeWidth(2);
-        return star;
 	}
 
 

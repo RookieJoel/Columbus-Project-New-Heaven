@@ -4,8 +4,6 @@ import board.Hexagon;
 import board.Resource;
 import building.interfaces.Attackable;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import player.Player;
 
 public class MissileFortress extends Building implements Attackable{
@@ -24,8 +22,6 @@ public class MissileFortress extends Building implements Attackable{
 		if(target.isDestroyed()) {
 			target.getPosition().setBuilding(null);
 		}
-		// TODO Auto-generated method stub
-		
 	}
 
 	public int getAtk() {
@@ -37,18 +33,10 @@ public class MissileFortress extends Building implements Attackable{
 	}
 
 	@Override
-	public Node createShape(double radius) {
-		Polygon missileShape = new Polygon();
-        double size = radius * 0.3;
-        missileShape.getPoints().addAll(
-            0.0, -size,       // Tip
-            -size / 2, size,  // Bottom-left
-            size / 2, size    // Bottom-right
-        );
-        missileShape.setFill(getPlayerColor());
-        missileShape.setStroke(Color.BLACK);
-        missileShape.setStrokeWidth(2);
-        return missileShape;
+    public Node createShape(double radius) {
+	    return createHexagonalShape(radius, "/images/missile.png");
+
     }
+
 
 }

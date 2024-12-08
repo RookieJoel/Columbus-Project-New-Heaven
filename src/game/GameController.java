@@ -25,12 +25,13 @@ public class GameController {
     private StatusPane player2StatusPane;
     
     private boolean turnActionCompleted; // Flag to track if an action is completed in the current turn
-
+    
     private GameController(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
         this.currentPlayer = player1; // Default to Player 1
         this.hexagonPane = new HexagonPane();
+        
     }
 
     public HexagonPane getHexagonPane() {
@@ -73,6 +74,7 @@ public class GameController {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+    
 
     public void switchTurn() {
         currentPlayer = (currentPlayer == player1) ? player2 : player1;
@@ -99,11 +101,11 @@ public class GameController {
 
     public void markActionCompleted() {
         this.turnActionCompleted = true;
-
-        // Disable all buttons in the current ActionPane
+        
         getCurrentActionPane().disableAllButtons();
     }
-
+    
+    
     public static void reset() {
         instance = null; // Clear the existing instance
     }
@@ -133,6 +135,16 @@ public class GameController {
             if (buildPane2 != null) buildPane2.updateButtonStates(); // Update button states
         }
     }
+    
+    public StatusPane getStatusPaneForPlayer(Player player) {
+        if (player == player1) {
+            return player1StatusPane;
+        } else if (player == player2) {
+            return player2StatusPane;
+        }
+        return null; // Default to null if the player is not recognized
+    }
+
 
     public Player getPlayer1() {
         return player1;
