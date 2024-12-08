@@ -144,6 +144,14 @@ public class GameController {
         }
         return null; // Default to null if the player is not recognized
     }
+    
+    public void resetHexagonBorders() {
+        hexagonPane.resetHexagonBorders(); // Clear all borders
+        hexagonPane.setAllHexagonsClickEnabled(false); // Disable all hexagon clicks
+        hexagonPane.setSeletedHexagon(null); // Clear selected hexagon
+        hexagonPane.setAttackingState(0); // Reset attacking state
+    }
+
 
 
     public Player getPlayer1() {

@@ -54,24 +54,32 @@ public class ActionPane extends VBox {
     }
     
     private void onAttackButtonClicked() {
+    	 if (GameController.getInstance().isTurnActionCompleted()) {
+    	        System.out.println("You cannot perform another action this turn!");
+    	        return;
+    	    }
+
+    	GameController.getInstance().resetHexagonBorders();
+    	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),GameController.getInstance().getHexagonPane(),null);
+    	GameController.getInstance().getHexagonPane().setAttackingState(1);
+    	attack.showAttackableBuilding();
+    	
+    }
+
+    private void onBuildButtonClicked() {
         if (GameController.getInstance().isTurnActionCompleted()) {
             System.out.println("You cannot perform another action this turn!");
             return;
         }
 
-        Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),
-                                    GameController.getInstance().getHexagonPane(),
-                                    null);
-        attack.showAttackableBuilding();
-    }
-
-    private void onBuildButtonClicked() {
-        // Toggle visibility of BuildActionPane
+        GameController.getInstance().resetHexagonBorders(); // Clear borders and state
         buildActionPane.setVisible(!buildActionPane.isVisible());
         Build build = new Build(GameController.getInstance().getCurrentPlayer(),
-                                GameController.getInstance().getHexagonPane(), null);
+                                GameController.getInstance().getHexagonPane(),
+                                null);
         build.canBuildHex();
     }
+
     
     private void onProduceButtonClicked() {
         System.out.println("Produce button clicked.");
