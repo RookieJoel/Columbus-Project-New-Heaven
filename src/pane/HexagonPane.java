@@ -2,6 +2,8 @@ package pane;
 
 import board.Hexagon;
 import board.Resource;
+import building.Building;
+import game.Build;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import player.Player;
@@ -18,6 +20,7 @@ public class HexagonPane extends Group {
     private static final int GAPX = 10;
     private static final int GAPY = 5;
     private static final int HexagonRadius = 100;
+    private Hexagon seletedHexagon;
 
     public HexagonPane() {
         createHexagons();
@@ -102,10 +105,14 @@ public class HexagonPane extends Group {
             hexagon.resetBorder();
         }
     }
+
     
     private void onHexagonClick(Hexagon hexagon) {
         int hexX = hexagon.getX();
         int hexY = hexagon.getY();
+        this.resetHexagonBorders();
+        hexagon.highlightBorder();
+        seletedHexagon = hexagon;
         System.out.println("Hexagon clicked at position: (" + hexX + ", " + hexY + ")");
     }
 
@@ -127,7 +134,7 @@ public class HexagonPane extends Group {
     
     public Hexagon getLeftmostHexagon() {
     	for (Hexagon hexagon : hexagons) {
-            if(hexagon.getX() == 2 && hexagon.getY() == 0) {
+            if(hexagon.getX() == -2 && hexagon.getY() == 0) {
             	return hexagon;
             }   
     	}
@@ -136,7 +143,7 @@ public class HexagonPane extends Group {
 
     public Hexagon getRightmostHexagon() {
     	for (Hexagon hexagon : hexagons) {
-            if(hexagon.getX() == -2 && hexagon.getY() == 0) {
+            if(hexagon.getX() == 2 && hexagon.getY() == 0) {
             	return hexagon;
             }   
     	}
@@ -148,13 +155,21 @@ public class HexagonPane extends Group {
         int y = hex.getY();
 
         for (Hexagon h : hexagons) {
-            if (Math.abs(h.getX() - x) <= 1 && Math.abs(h.getY() - y) <= 2 && !(h.getX() == x && h.getY() == y)) {
+            if (Math.abs(h.getX() - x) <=1 && Math.abs(h.getY() - y) <= 2 && !(h.getX() == x && h.getY() == y)) {
                 adjacentHexes.add(h);
             }
         }
         return adjacentHexes;
     }
     
+    public Hexagon findHex(int x, int y) {
+    	 for (Hexagon h : hexagons) {
+    		 if(h.getX() == x && h.getY() == y) {
+    			 return h;
+    		 }
+    	 }
+    	 return null;
+    }
     // Add resources from highlighted tiles to the current player's inventory
     public void addResourcesToPlayer(Player currentPlayer, int tile1, int tile2) {
         for (Hexagon hex : hexagons) {
@@ -164,6 +179,14 @@ public class HexagonPane extends Group {
             }
         }
     }
+
+	public Hexagon getSeletedHexagon() {
+		return seletedHexagon;
+	}
+
+	public void setSeletedHexagon(Hexagon seletedHexagon) {
+		this.seletedHexagon = seletedHexagon;
+	}
 
     
     

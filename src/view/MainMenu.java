@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 
 public class MainMenu extends Application {
 
+    private StackPane rootPane; // Root pane to manage multiple layers
+
     @Override
     public void start(Stage primaryStage) {
         // Set the background image
@@ -26,7 +28,7 @@ public class MainMenu extends Application {
         bg.setPreserveRatio(false);
 
         // Load custom font
-        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/Steelar-j9Vnj.otf"), 50);
+        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/KnightWarrior-w16n8.otf"), 100);
 
         // Game Title
         Text title = new Text("Columbus Project : New Heaven");
@@ -44,8 +46,8 @@ public class MainMenu extends Application {
         // Button actions
         startButton.setOnAction(e -> openGame(primaryStage));
         howToPlayButton.setOnAction(e -> {
-            Help help = new Help(); // สร้างอินสแตนซ์ของ Help
-            help.showHelpWindow(); // เรียกหน้าต่าง Help
+            Help help = new Help(rootPane); // Pass rootPane to Help
+            help.showHowToPlayPane(); // Show HowToPlay Pane
         });
         exitButton.setOnAction(e -> primaryStage.close());
 
@@ -53,15 +55,16 @@ public class MainMenu extends Application {
         HBox buttonLayout = new HBox(40, howToPlayButton, startButton, exitButton);
         buttonLayout.setAlignment(Pos.CENTER);
 
-        // Main layout with background, title, buttons, and credits
+        // Main layout with background, title, buttons
         VBox mainLayout = new VBox(30, title, buttonLayout);
         mainLayout.setAlignment(Pos.CENTER);
 
-        StackPane rootPane = new StackPane(bg, mainLayout);
+        // Root Pane
+        rootPane = new StackPane(bg, mainLayout); // StackPane for layering
         Scene mainScene = new Scene(rootPane, 800, 600);
 
         primaryStage.setScene(mainScene);
-        primaryStage.setTitle("Columbus Project : New Heaven");
+        primaryStage.setTitle("Columbus Project");
         primaryStage.setFullScreen(true);
         primaryStage.show();
     }

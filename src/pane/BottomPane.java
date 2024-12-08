@@ -1,19 +1,22 @@
 package pane;
 
 import game.Dice;
+import game.GameController;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.text.Font;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class BottomPane extends HBox {
     private final Dice dice;
@@ -62,11 +65,11 @@ public class BottomPane extends HBox {
                     }
                 }
 
-                // After 1.5 seconds, stop rolling and calculate the result
                 Platform.runLater(() -> {
                     resetHexagonBordersAction.run(); // Reset all hexagon borders
                     rollButton.setDisable(false);
-
+                    GameController.getInstance().getHexagonPane().setSeletedHexagon(null);
+                    GameController.getInstance().getHexagonPane().setAllHexagonsClickEnabled(false);
                     int rollResult = dice.roll();
                     int tile1 = rollResult;        // First rolled tile
                     int tile2 = rollResult + 10;  // Second rolled tile
@@ -80,7 +83,17 @@ public class BottomPane extends HBox {
         // Back Button
         Button backButton = new Button("Back to Main Menu");
         backButton.setFont(Font.font(20));
-        backButton.setOnAction(e -> openMainMenuAction.run());
+        backButton.setOnAction(e -> {
+            // Find the root StackPane dynamically
+            StackPane rootPane = findRootPane(this);
+            if (rootPane != null) {
+                ConfirmationDialog confirmationDialog = new ConfirmationDialog(rootPane);
+                confirmationDialog.show(
+                    "Are you sure you want to exit?",
+                    openMainMenuAction // Action to execute when confirmed
+                );
+            }
+        });
 
         // Left Container: Dice and Roll Button
         VBox bottomLeftContainer = new VBox(10, dice.getDicePane(), rollButton);
@@ -95,12 +108,21 @@ public class BottomPane extends HBox {
         // Spacer to separate left and right
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        
+
         // Add components to the HBox
         this.getChildren().addAll(bottomLeftContainer, spacer, bottomRightContainer);
-        
-        //Positioning
+
+        // Positioning
         bottomLeftContainer.setTranslateY(-50);
+    }
+
+    // Utility method to find the root StackPane
+    private StackPane findRootPane(Node node) {
+        Scene scene = node.getScene(); // Retrieve the scene
+        if (scene != null && scene.getRoot() instanceof StackPane) {
+            return (StackPane) scene.getRoot(); // Return the root StackPane
+        }
+        return null; // Return null if root is not a StackPane
     }
 
     public Dice getDice() {

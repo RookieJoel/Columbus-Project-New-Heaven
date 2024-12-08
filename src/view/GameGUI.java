@@ -1,5 +1,6 @@
 package view;
 
+import game.Build;
 import game.GameController;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -25,6 +26,8 @@ public class GameGUI extends Application {
 
     @Override
     public void start(Stage stage) {
+    	
+        GameController.reset();
         // Background Image
         String imagePath = ClassLoader.getSystemResource("images/Space.png").toString();
         ImageView bg = new ImageView(new Image(imagePath));
@@ -32,8 +35,6 @@ public class GameGUI extends Application {
         bg.fitWidthProperty().bind(stage.widthProperty());
         bg.fitHeightProperty().bind(stage.heightProperty());
 
-        // Create HexagonPane
-        HexagonPane hexagonPane = new HexagonPane();
 
         // Create Players
         Player player1 = new Player(1, "Player 1", null);
@@ -41,7 +42,7 @@ public class GameGUI extends Application {
 
         // Initialize GameController
         gameController = GameController.getInstance(player1, player2);
-
+        HexagonPane hexagonPane = GameController.getInstance().getHexagonPane();
         // Assign colonies
         Hexagon leftmostHexagon = hexagonPane.getLeftmostHexagon();
         Hexagon rightmostHexagon = hexagonPane.getRightmostHexagon();
@@ -59,6 +60,8 @@ public class GameGUI extends Application {
         // Create StatusPanes
         StatusPane player1Status = new StatusPane(player1);
         StatusPane player2Status = new StatusPane(player2);
+        
+        gameController.setStatusPanes(player1Status, player2Status);
 
         // Create ActionPane and other panes
         AlchemizePane alchemizePane = new AlchemizePane(gameController.getCurrentPlayer(), () -> {
@@ -68,13 +71,28 @@ public class GameGUI extends Application {
                 player2Status.updateResources(player2);
             }
         });
+
+        Build build1 = new Build(player1, hexagonPane,player1Status);
+        Build build2 = new Build(player2, hexagonPane,player2Status);
         
-        BuildActionPane buildPane1 = new BuildActionPane();
-        BuildActionPane buildPane2 = new BuildActionPane();
+        gameController.setBuilds(build1, build2);
+        
+        BuildActionPane buildPane1 = new BuildActionPane(build1);
+        BuildActionPane buildPane2 = new BuildActionPane(build2);
 
         ActionPane player1Actions = new ActionPane("Player 1", null, buildPane1, alchemizePane);
         ActionPane player2Actions = new ActionPane("Player 2", null, buildPane2, alchemizePane);
-
+        
+     // Set panes in GameController
+        gameController.setBuildActionPanes(buildPane1, buildPane2);
+        gameController.setActionPanes(player1Actions, player2Actions);
+        
+        // Hide Player 2's ActionPane initially
+        player2Actions.setVisible(false);
+        
+        // Update button states for Player 1's BuildActionPane
+        buildPane1.updateButtonStates(); // Ensure the buttons are disabled if the player cannot afford buildings
+        
         // Create BottomPane
         BottomPane bottomPane = new BottomPane(
             () -> hexagonPane.highlightRandomHexagon(),
@@ -121,6 +139,8 @@ public class GameGUI extends Application {
         stage.setFullScreen(true);
         stage.show();
     }
+    
+    
 
     public static void main(String[] args) {
         launch();

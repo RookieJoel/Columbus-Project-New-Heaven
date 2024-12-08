@@ -2,6 +2,8 @@ package building;
 
 import java.util.HashMap;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
+
 import java.util.Map;
 
 import board.Hexagon;
@@ -103,6 +105,13 @@ public abstract class Building {
 		public void setPlayer(Player player) {
 			this.player = player;
 		}
+		
+		protected Color getPlayerColor() {
+	        if (player == null) {
+	            return Color.GRAY; // Default color if no player is assigned
+	        }
+	        return player.getId() == 1 ? Color.BLUE : Color.GREEN; // Blue for Player 1, Green for Player 2
+	    }
 		
 		public abstract Node createShape(double radius);
 }

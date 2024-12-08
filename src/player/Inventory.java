@@ -17,7 +17,7 @@ public class Inventory {
     private void initializeResources() {
         resources.put(Resource.VIBRANIUM, 1);
         resources.put(Resource.OIL, 0);
-        resources.put(Resource.COPPER, 2);
+        resources.put(Resource.COPPER, 3);
         resources.put(Resource.URANIUM, 3);
         resources.put(Resource.JOJOLIUM, 0);
     }

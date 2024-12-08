@@ -12,7 +12,7 @@ public class Factory extends Building implements Produceable{
 
 	public Factory( Hexagon position, Player player) {
 		super("Factory", 10, 3, position, player);
-		this.addCost(Resource.OIL, 3);
+		this.addCost(Resource.OIL, 4);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -25,7 +25,7 @@ public class Factory extends Building implements Produceable{
 	public Node createShape(double radius) {
 		
 		Rectangle rectangle = new Rectangle(radius * 0.4, radius * 0.4); // Rectangle is 40% of hexagon size
-        rectangle.setFill(Color.GREEN);
+        rectangle.setFill(getPlayerColor());
         rectangle.setStroke(Color.WHITE);
         rectangle.setStrokeWidth(2);
         return rectangle;

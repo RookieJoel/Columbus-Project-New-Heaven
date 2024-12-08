@@ -15,7 +15,7 @@ public class Colony extends Building{
 	@Override
 	public Node createShape(double radius) {
 		Circle circle = new Circle(radius * 0.3); // Circle is 20% of hexagon size
-        circle.setFill(Color.BLUE);
+        circle.setFill(getPlayerColor());
         circle.setStroke(Color.WHITE);
         circle.setStrokeWidth(2);
         return circle;

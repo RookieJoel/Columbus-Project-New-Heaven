@@ -1,6 +1,8 @@
 package pane;
 
+import game.Build;
 import game.GameController;
+import game.Produce;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,6 +15,7 @@ public class ActionPane extends VBox {
     private Button alchemizeButton; // New button for Alchemize
     private BuildActionPane buildActionPane;
     private AlchemizePane alchemizePane; // Reference to AlchemizePane
+    
 
     public ActionPane(String playerName, GameController gameController, BuildActionPane buildActionPane, AlchemizePane alchemizePane) {
         super(10); // Spacing between buttons
@@ -28,7 +31,7 @@ public class ActionPane extends VBox {
         attackButton = new Button("Attack");
         attackButton.setOnAction(e -> hideBuildPane());
         produceButton = new Button("Produce");
-        produceButton.setOnAction(e -> hideBuildPane());
+        produceButton.setOnAction(e -> onProduceButtonClicked());
         alchemizeButton = new Button("Alchemize");
         alchemizeButton.setOnAction(e -> onAlchemizeButtonClicked());
 
@@ -50,11 +53,45 @@ public class ActionPane extends VBox {
     }
 
     private void onBuildButtonClicked() {
-        // Toggle BuildActionPane visibility
+        // Toggle visibility of BuildActionPane
         buildActionPane.setVisible(!buildActionPane.isVisible());
+        Build build = new Build(GameController.getInstance().getCurrentPlayer(),
+                                GameController.getInstance().getHexagonPane(), null);
+        build.canBuildHex();
+    }
+    
+    private void onProduceButtonClicked() {
+        System.out.println("Produce button clicked.");
+
+        // Get the current player's StatusPane
+        StatusPane currentStatusPane = GameController.getInstance().getCurrentStatusPane();
+        if (currentStatusPane == null) {
+            System.out.println("Error: Current StatusPane is null.");
+            return;
+        }
+
+        // Create and execute the Produce logic
+        Produce produce = new Produce(GameController.getInstance().getCurrentPlayer(), currentStatusPane);
+        boolean produced = produce.execute();
+
+        if (produced) {
+            // Disable the produce button after successful production
+            System.out.println("Production successful. Disabling produce button.");
+            GameController.getInstance().markActionCompleted();
+            } else {
+            System.out.println("Production failed or no resources produced.");
+        }
     }
 
+
     private void onAlchemizeButtonClicked() {
+        System.out.println("Alchemize button clicked.");
+
+        if (GameController.getInstance().isTurnActionCompleted()) {
+            System.out.println("You cannot perform another action this turn!");
+            return;
+        }
+
         // Toggle visibility of AlchemizePane
         boolean isCurrentlyVisible = alchemizePane.isVisible();
         if (!isCurrentlyVisible) {
@@ -67,7 +104,42 @@ public class ActionPane extends VBox {
         if (!isCurrentlyVisible) {
             buildActionPane.setVisible(false);
         }
+
+        // Assuming the Alchemize action succeeds immediately for now:
+        boolean alchemizeSuccess = true; // Replace with actual logic for alchemizing
+
+        if (alchemizeSuccess) {
+            System.out.println("Alchemize action successful. Disabling all buttons.");
+            GameController.getInstance().markActionCompleted();
+        } else {
+            System.out.println("Alchemize action failed.");
+        }
     }
+
+    
+    public void disableAllButtons() {
+        buildButton.setDisable(true);
+        attackButton.setDisable(true);
+        produceButton.setDisable(true);
+        alchemizeButton.setDisable(true);
+    }
+
+    public void enableAllButtons() {
+        buildButton.setDisable(false);
+        attackButton.setDisable(false);
+        produceButton.setDisable(false);
+        alchemizeButton.setDisable(false);
+    }
+
+    
+    public void disableBuildButton() {
+        buildButton.setDisable(true);
+    }
+
+    public void enableBuildButton() {
+        buildButton.setDisable(false);
+    }
+
 
     private void hideBuildPane() {
         // Hide BuildActionPane when other buttons are clicked

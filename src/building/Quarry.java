@@ -21,9 +21,15 @@ public class Quarry extends Building implements Upgradable,Produceable{
 
 	@Override
 	public void produceResources(Player player) {
-		// TODO Auto-generated method stub
-		player.getInventory().addResource(this.getPosition().getResource(), 1);
+	    if (getPosition() != null) {
+	        Resource resource = getPosition().getResource();
+	        player.getInventory().addResource(resource, 1);
+	        System.out.println("Produced 1 unit of " + resource + " for player " + player.getName());
+	    } else {
+	        System.out.println("Error: Quarry position is null.");
+	    }
 	}
+
 
 
 	@Override
@@ -46,7 +52,7 @@ public class Quarry extends Building implements Upgradable,Produceable{
 	            -size, size, // Bottom-left
 	            size, size   // Bottom-right
 	        );
-	        triangle.setFill(Color.BROWN);
+	        triangle.setFill(getPlayerColor());
 	        triangle.setStroke(Color.WHITE);
 	        triangle.setStrokeWidth(2);
 	        return triangle;

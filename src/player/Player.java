@@ -38,12 +38,35 @@ public class Player {
     }
     
     public List<Building> getBuildings() {
+        if (buildings.isEmpty()) {
+            System.out.println("Player has no buildings.");
+        } else {
+            System.out.println("Player buildings: " + buildings.size());
+            for (Building building : buildings) {
+                System.out.println("Building: " + building.getName());
+            }
+        }
         return buildings;
     }
 
+
     public void addBuilding(Building building) {
-        buildings.add(building);
+        if (building != null) {
+            buildings.add(building);
+            System.out.println("Added building: " + building.getName() + " for player: " + name);
+        } else {
+            System.out.println("Attempted to add null building.");
+        }
     }
+    
+    public void printInventory() {
+        System.out.println("Inventory for Player: " + name);
+        inventory.getResources().forEach((resource, amount) -> {
+            System.out.println(resource + ": " + amount);
+        });
+    }
+
+
 
     public Colony getColony() {
         return colony;

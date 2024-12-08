@@ -67,7 +67,7 @@ public class MilitaryCamp extends Building implements Attackable , Upgradable{
             );
         }
 
-        star.setFill(Color.DARKBLUE);
+        star.setFill(getPlayerColor());
         star.setStroke(Color.WHITE);
         star.setStrokeWidth(2);
         return star;

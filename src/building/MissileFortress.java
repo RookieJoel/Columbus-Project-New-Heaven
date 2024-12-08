@@ -41,7 +41,7 @@ public class MissileFortress extends Building implements Attackable{
             -size / 2, size,  // Bottom-left
             size / 2, size    // Bottom-right
         );
-        missileShape.setFill(Color.RED);
+        missileShape.setFill(getPlayerColor());
         missileShape.setStroke(Color.BLACK);
         missileShape.setStrokeWidth(2);
         return missileShape;
