@@ -1,5 +1,6 @@
 package pane;
 
+import game.Attack;
 import game.Build;
 import game.GameController;
 import game.Produce;
@@ -29,7 +30,7 @@ public class ActionPane extends VBox {
         buildButton = new Button("Build");
         buildButton.setOnAction(e -> onBuildButtonClicked());
         attackButton = new Button("Attack");
-        attackButton.setOnAction(e -> hideBuildPane());
+        attackButton.setOnAction(e -> onAttackButtonClicked());
         produceButton = new Button("Produce");
         produceButton.setOnAction(e -> onProduceButtonClicked());
         alchemizeButton = new Button("Alchemize");
@@ -50,6 +51,13 @@ public class ActionPane extends VBox {
         this.getChildren().addAll(buildButton, attackButton, produceButton, alchemizeButton);
 
         this.setTranslateY(30);
+    }
+    
+    private void onAttackButtonClicked() {
+    	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),GameController.getInstance().getHexagonPane(),null);
+    	GameController.getInstance().getHexagonPane().setAttackingState(1);
+    	attack.showAttackableBuilding();
+    	
     }
 
     private void onBuildButtonClicked() {

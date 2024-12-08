@@ -39,6 +39,10 @@ public class MilitaryCamp extends Building implements Attackable , Upgradable{
 
 	@Override
 	public void attack(Building target) {
+		target.takeDamage(atk);
+		if(target.isDestroyed()) {
+			target.getPosition().setBuilding(null);
+		}
 		// TODO Auto-generated method stub
 		
 	}
@@ -73,10 +77,5 @@ public class MilitaryCamp extends Building implements Attackable , Upgradable{
         return star;
 	}
 
-	@Override
-	public boolean canAttack(Building target) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

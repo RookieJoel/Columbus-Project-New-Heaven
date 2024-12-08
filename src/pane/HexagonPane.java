@@ -3,7 +3,10 @@ package pane;
 import board.Hexagon;
 import board.Resource;
 import building.Building;
+import building.interfaces.Attackable;
+import game.Attack;
 import game.Build;
+import game.GameController;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import player.Player;
@@ -21,6 +24,9 @@ public class HexagonPane extends Group {
     private static final int GAPY = 5;
     private static final int HexagonRadius = 100;
     private Hexagon seletedHexagon;
+    
+    private Hexagon attackerHex;
+    private int atackingState = 0;
 
     public HexagonPane() {
         createHexagons();
@@ -110,11 +116,29 @@ public class HexagonPane extends Group {
     private void onHexagonClick(Hexagon hexagon) {
         int hexX = hexagon.getX();
         int hexY = hexagon.getY();
+        seletedHexagon = hexagon;
+        if(atackingState == 1) {
+        	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),
+                    GameController.getInstance().getHexagonPane(),
+                    null);
+        	 attackerHex = hexagon;
+        	 attack.showTarketBuilding();
+        	 return;
+        }
+        if(atackingState == 2) {
+        	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),
+                    GameController.getInstance().getHexagonPane(),
+                    null);
+        	((Attackable) attackerHex.getBuilding()).attack(seletedHexagon.getBuilding());
+        	atackingState = 0;
+        	this.resetHexagonBorders();
+        	this.setAllHexagonsClickEnabled(false);
+        	return;
+        }
         this.resetHexagonBorders();
         hexagon.highlightBorder();
-        seletedHexagon = hexagon;
         System.out.println("Hexagon clicked at position: (" + hexX + ", " + hexY + ")");
-    }
+        	}
 
     public void setAllHexagonsClickEnabled(boolean enabled) {
         for (Hexagon hexagon : hexagons) {
@@ -162,14 +186,6 @@ public class HexagonPane extends Group {
         return adjacentHexes;
     }
     
-    public Hexagon findHex(int x, int y) {
-    	 for (Hexagon h : hexagons) {
-    		 if(h.getX() == x && h.getY() == y) {
-    			 return h;
-    		 }
-    	 }
-    	 return null;
-    }
     // Add resources from highlighted tiles to the current player's inventory
     public void addResourcesToPlayer(Player currentPlayer, int tile1, int tile2) {
         for (Hexagon hex : hexagons) {
@@ -187,6 +203,10 @@ public class HexagonPane extends Group {
 	public void setSeletedHexagon(Hexagon seletedHexagon) {
 		this.seletedHexagon = seletedHexagon;
 	}
+	
+	 public void setAttackingState(int atackingState) {
+			this.atackingState = atackingState;
+		}
 
     
     

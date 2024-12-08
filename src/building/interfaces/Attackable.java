@@ -4,5 +4,4 @@ import building.Building;
 
 public interface Attackable {
     void attack(Building target);
-    boolean canAttack(Building target);
 }

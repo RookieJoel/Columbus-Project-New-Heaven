@@ -20,6 +20,10 @@ public class MissileFortress extends Building implements Attackable{
 
 	@Override
 	public void attack(Building target) {
+		target.takeDamage(atk);
+		if(target.isDestroyed()) {
+			target.getPosition().setBuilding(null);
+		}
 		// TODO Auto-generated method stub
 		
 	}
@@ -46,11 +50,5 @@ public class MissileFortress extends Building implements Attackable{
         missileShape.setStrokeWidth(2);
         return missileShape;
     }
-
-	@Override
-	public boolean canAttack(Building target) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

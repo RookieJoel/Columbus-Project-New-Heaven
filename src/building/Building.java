@@ -77,7 +77,10 @@ public abstract class Building {
 	    }
 
 	    public boolean isDestroyed() {
-	        return isDestroyed;
+	    	if(this.hp <= 0) {
+	    		return true;
+	    	}
+	    	return false;
 	    }
 
 	    public String getId() {
