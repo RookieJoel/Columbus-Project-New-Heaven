@@ -48,6 +48,7 @@ public abstract class Building {
 	        // Generate hash-based ID
 	        this.id = generateId(position, name);
 	    }
+
 	    
 	    private void initializeHpText() {
 	        hpText = new Text(String.valueOf(hp));

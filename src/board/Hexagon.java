@@ -146,7 +146,7 @@ public class Hexagon extends Group {
     public int getNumber() {
         return number;
     }
-
+    
     public Resource getResource() {
         return resource;
     }

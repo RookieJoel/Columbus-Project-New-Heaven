@@ -1,6 +1,10 @@
 package game;
 
 import pane.BuildActionPane;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
+import javafx.scene.Node;
+import javafx.util.Duration;
 import pane.ActionPane;
 import pane.HexagonPane;
 import pane.StatusPane;
@@ -75,6 +79,7 @@ public class GameController {
         return currentPlayer;
     }
     
+    
 
     public void switchTurn() {
         currentPlayer = (currentPlayer == player1) ? player2 : player1;
@@ -94,6 +99,7 @@ public class GameController {
         updatePaneVisibility();
         currentPlayer.printInventory(); // Debug inventory at the start of the turn
     }
+    
     
     public boolean isTurnActionCompleted() {
         return turnActionCompleted;

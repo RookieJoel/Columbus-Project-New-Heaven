@@ -3,6 +3,8 @@ package building;
 import board.Hexagon;
 import board.Resource;
 import building.interfaces.Attackable;
+import game.AnimationUtils;
+import game.GameController;
 import javafx.scene.Node;
 import player.Player;
 
@@ -18,11 +20,22 @@ public class MissileFortress extends Building implements Attackable{
 
 	@Override
 	public void attack(Building target) {
-		target.takeDamage(atk);
-		if(target.isDestroyed()) {
-			target.getPosition().setBuilding(null);
-		}
+	    if (target != null) {
+	        target.takeDamage(atk); // Deal damage to the target
+	        
+	        if (target.isDestroyed()) {
+	            System.out.println("Target destroyed!");
+
+	            Node buildingNode = target.getPosition().getBuilding().createShape(100);
+	            AnimationUtils.playDestructionAnimation(buildingNode, () -> {
+	                // Remove building after animation
+	                target.getPosition().setBuilding(null);
+	                GameController.getInstance().getHexagonPane().resetHexagonBorders();
+	            }, "/sounds/DrumRoll.mp3");
+	        }
+	    }
 	}
+
 
 	public int getAtk() {
 		return atk;

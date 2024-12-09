@@ -14,7 +14,7 @@ public class MilitaryCamp extends Building implements Attackable{
 		
 	public MilitaryCamp(Hexagon position, Player player) {
 		super("MilitaryCamp", 3, 1, position, player);
-		this.setAtk(1);
+		this.setAtk(3);
 		this.addCost(Resource.VIBRANIUM, 3);
 		
 		// TODO Auto-generated constructor stub
@@ -25,15 +25,6 @@ public class MilitaryCamp extends Building implements Attackable{
 	public void attack(Building target) {
 	    if (target != null) {
 	        target.takeDamage(atk); // Deal damage to the target
-	        if (target instanceof Colony) {
-	            // If the target is a Colony, update its owner's StatusPane
-	            Player owner = target.getPlayer();
-	            if (owner != null) {
-	                GameController.getInstance()
-	                    .getStatusPaneForPlayer(owner)
-	                    .updateHp(target.getHp()); // Sync HP with the Colony's HP
-	            }
-	        }
 	        if (target.isDestroyed()) {
 	            target.getPosition().setBuilding(null); // Remove the building from the board
 	        }
