@@ -2,6 +2,8 @@ package building;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import board.Hexagon;
@@ -9,28 +11,16 @@ import board.Resource;
 import building.interfaces.Attackable;
 import building.interfaces.Upgradable;
 import javafx.scene.Node;
+import pane.HexagonPane;
 import player.Player;
 
 public class MilitaryCamp extends Building implements Attackable,Upgradable{
 	private int atk;
 		
 	public MilitaryCamp(Hexagon position, Player player) {
-		super("MilitaryCamp", 3, position, player);
+		super("MilitaryCamp", 5, position, player);
 		this.setAtk(3);
 		this.addCost(Resource.VIBRANIUM, 3);
-		
-		// TODO Auto-generated constructor stub
-	}
-
-
-	@Override
-	public void attack(Building target) {
-	    if (target != null) {
-	        target.takeDamage(atk); // Deal damage to the target
-	        if (target.isDestroyed()) {
-	            target.getPosition().setBuilding(null); // Remove the building from the board
-	        }
-	    }
 	}
 
 	@Override
@@ -59,14 +49,24 @@ public class MilitaryCamp extends Building implements Attackable,Upgradable{
 
         return true; // Enough resources
 	}
+	
 
+	@Override
+	public void attack(Building target) {
+	    if (target != null) {
+	        target.takeDamage(atk); // Deal damage to the target
+	        if (target.isDestroyed()) {
+	            target.getPosition().setBuilding(null); // Remove the building from the board
+	        }
+	    }
+	}
 
 	public int getAtk() {
 		return atk;
 	}
 
 	public void setAtk(int atk) {
-		this.atk = atk;
+		this.atk = Math.max(0, atk);
 	}
 
 	@Override
@@ -74,6 +74,17 @@ public class MilitaryCamp extends Building implements Attackable,Upgradable{
 	    return createHexagonalShape(radius, "/images/MilitaryCamp.png");
 
 	}
+	
+	 @Override
+	    public List<Hexagon> getTargetableHexagons(HexagonPane hexagonPane, Player currentPlayer) {
+	        List<Hexagon> targetableHexagons = new ArrayList<>();
+	        for (Hexagon hexagon : hexagonPane.getAdjacentHexagons(hexagonPane.getSeletedHexagon())) {
+	            if (hexagon.getBuilding() != null && hexagon.getBuilding().getPlayer() != currentPlayer) {
+	                targetableHexagons.add(hexagon);
+	            }
+	        }
+	        return targetableHexagons;
+	    }
 
 
 	

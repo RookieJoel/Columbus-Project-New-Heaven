@@ -19,7 +19,7 @@ import game.GameController;
 import player.Player;
 
 public abstract class Building {
-	 	private final String id; // Identifier based on hash of tile number and type
+	 	private final String ID; // Identifier based on hash of tile number and type
 	    private String name; // Name of the building
 	    private int hp; // Hit Points of the building
 	    private Hexagon position; // Hexagon where the building is constructed
@@ -29,17 +29,17 @@ public abstract class Building {
 	    private Text hpText; // Text to display HP
 	    
 	    public Building(String name, int hp, Hexagon position,Player player) {
-	        this.name = name;
-	        this.hp = hp;
-	        this.position = position;
-	        this.player = player;
-	        this.isDestroyed = false;
+	        setName(name);
+	        setHp(hp);
+	        setPosition(position);
+	        setPlayer(player);
+	        setDestroyed(false);
 	        this.cost = new HashMap<>();
 
 	        initializeHpText();
 	        
 	        // Generate hash-based ID
-	        this.id = generateId(position, name);
+	        this.ID = generateId(position, name);
 	    }
 
 	    
@@ -89,7 +89,7 @@ public abstract class Building {
 	    
 
 	    public String getId() {
-	        return id;
+	        return ID;
 	    }
 
 	    // Utility methods

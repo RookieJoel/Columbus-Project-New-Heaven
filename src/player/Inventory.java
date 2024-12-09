@@ -31,12 +31,12 @@ public class Inventory {
     }
 
     public boolean removeResource(Resource resource, int amount) {
-        // ตรวจสอบว่ามี Resource เพียงพอ
+        // check if you have enough res
         if (RESOURCES.getOrDefault(resource, 0) < amount) {
-            return false; // ไม่เพียงพอ
+            return false; 
         }
 
-        // ลดจำนวน Resource
+        // if yes: deduct with specific amount
         RESOURCES.put(resource, RESOURCES.get(resource) - amount);
         return true;
     }

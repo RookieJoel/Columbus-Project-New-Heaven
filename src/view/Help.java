@@ -24,29 +24,26 @@ public class Help {
         howToPlayPane.setAlignment(Pos.CENTER);
 
         // Add a background with rounded corners
-        Rectangle background = new Rectangle(600, 400); // Width x Height
+        Rectangle background = new Rectangle(700, 500); // Width x Height
         background.setArcWidth(30); // Rounded corners
         background.setArcHeight(30);
         background.setFill(Color.DARKSLATEBLUE); // Background color
         background.setStroke(Color.LIGHTGRAY); // Border color
         background.setStrokeWidth(5); // Border thickness
 
-        // Load custom font
-        Font customFont = Font.loadFont(getClass().getResourceAsStream("/fonts/Steelar-j9Vnj.otf"), 30);
-
+       
         // HowToPlay Text
         Text howToPlayText = new Text(
             "How to Play:\n" +
             "1. กดปุ่ม START เพื่อเริ่มเกม\n" +
-            "2. กดปุ่ม Roll เพื่อทอยลูกเต๋า\n" +
-            "3. ลูกเต๋าจะแสดงผลคะแนน\n" +
-            "4. คะแนนจะถูกคำนวณและแสดงผล\n\n" +
+            "2. เลือกทำได้ 1 Action ต่อ turn\n" +
+            "3. กดปุ่ม Roll เพื่อจบ turn\n" +
+            "4. ใช้ทรัพยากรเพื่อสร้างอาวุธไปโจมตีศัตรู\n" +
+            "5. ปกป้อง Colony ของคุณซะ!\n" +
             "เล่นให้สนุก!"
         );
-        howToPlayText.setFont(customFont);
+        howToPlayText.setFont(new Font(40));
         howToPlayText.setFill(Color.LIGHTCYAN);
-        howToPlayText.setStroke(Color.DARKCYAN);
-        howToPlayText.setStrokeWidth(1);
 
         // Close Button
         Button closeButton = new Button("Close");

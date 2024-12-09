@@ -7,7 +7,7 @@ import player.Player;
 public class Colony extends Building{
 
 	public Colony(Hexagon position, Player player) {
-        super("Colony", 15, position, player); // Max upgrade level = 3, initial cost = 100
+        super("Colony", 20, position, player); 
     }
 
 	@Override

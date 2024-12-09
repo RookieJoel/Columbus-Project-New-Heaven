@@ -1,6 +1,9 @@
 package game;
 
+import java.util.List;
+
 import board.Hexagon;
+import building.Building;
 import building.MilitaryCamp;
 import building.MissileFortress;
 import building.interfaces.Attackable;
@@ -32,28 +35,28 @@ public class Attack {
     }
     
     public void showTarketBuilding() {
-    	hexagonPane.resetHexagonBorders();
-    	hexagonPane.setAllHexagonsClickEnabled(false);
-    	if(hexagonPane.getSeletedHexagon().getBuilding() instanceof MilitaryCamp) {
-    		for(Hexagon hexagon : hexagonPane.getAdjacentHexagons(hexagonPane.getSeletedHexagon())) {
-    			if(hexagon.getBuilding() != null && hexagon.getBuilding().getPlayer() != currentPlayer) {
-    				hexagon.highlightBorder();
-    				hexagon.setClickEnabled(true);
-    				hexagonPane.setAttackingState(2);
-    			}
-    		}
-    		
-    	}
-    	if(hexagonPane.getSeletedHexagon().getBuilding() instanceof MissileFortress) {
-    		for(Hexagon hexagon : hexagonPane.getHexagons()) {
-    			if(hexagon.getBuilding() != null && hexagon.getBuilding().getPlayer() != currentPlayer) {
-    				hexagon.highlightBorder();
-    				hexagon.setClickEnabled(true);
-    				hexagonPane.setAttackingState(2);
-    			}
-    		}
-    	}
+        hexagonPane.resetHexagonBorders();
+        hexagonPane.setAllHexagonsClickEnabled(false);
+
+        Hexagon selectedHexagon = hexagonPane.getSeletedHexagon();
+        if (selectedHexagon == null || selectedHexagon.getBuilding() == null) {
+            System.out.println("No building selected or building is null.");
+            return;
+        }
+
+        Building selectedBuilding = selectedHexagon.getBuilding();
+        if (selectedBuilding instanceof Attackable attackableBuilding) {
+            List<Hexagon> targetableHexagons = attackableBuilding.getTargetableHexagons(hexagonPane, currentPlayer);
+            for (Hexagon targetHexagon : targetableHexagons) {
+                targetHexagon.highlightBorder();
+                targetHexagon.setClickEnabled(true);
+            }
+            hexagonPane.setAttackingState(2); // Update the attacking state
+        } else {
+            System.out.println("Selected building is not attackable.");
+        }
     }
+
     
 
     
