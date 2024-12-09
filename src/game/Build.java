@@ -5,6 +5,7 @@ import java.util.Map;
 import board.Hexagon;
 import board.Resource;
 import building.Building;
+import building.interfaces.Upgradable;
 import pane.HexagonPane;
 import pane.StatusPane;
 import player.Player;
@@ -25,17 +26,15 @@ public class Build {
     // Method to attempt building on a hexagon
     public void canBuildHex() {
     	for(Hexagon hexagon : hexagonPane.getHexagons()) {
-    		if(hexagon.getBuilding() != null && hexagon.getBuilding().getPlayer() == currentPlayer) {
+    		if(hexagon.getBuilding() != null  && hexagon.getBuilding().getPlayer() == currentPlayer ) {
     			for(Hexagon h : this.hexagonPane.getAdjacentHexagons(hexagon)) {
-    				if(h.getBuilding() == null ) {
+    				if(h.getBuilding() == null || (h.getBuilding() instanceof Upgradable && h.getBuilding().getPlayer() == currentPlayer)) {
     				h.highlightBorder();
     				h.setClickEnabled(true);
     				}
     			}
     		}
     	}
-  
-    	
     }
     public void selectBuilding(Building building) {
     	if (building != null && hexagonPane.getSeletedHexagon() != null) {

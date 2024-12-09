@@ -2,6 +2,7 @@ package pane;
 
 import board.Hexagon;
 import building.*;
+import building.interfaces.Upgradable;
 import game.Build;
 import game.GameController;
 import javafx.geometry.Insets;
@@ -11,11 +12,11 @@ import javafx.scene.layout.VBox;
 
 public class BuildActionPane extends VBox {
 
-    private Button factoryButton;
     private Button militaryCampButton;
-    private Button missileFortressButton;
     private Button quarryButton;
+    private Button upgradeButton;
     private Build build;
+	
 
     public BuildActionPane(Build build) {
         super(10); // Spacing between buttons
@@ -25,28 +26,26 @@ public class BuildActionPane extends VBox {
         this.setTranslateY(20);
 
         // Initialize buttons
-        factoryButton = new Button("Factory");
         militaryCampButton = new Button("Military Camp");
-        missileFortressButton = new Button("Missile Fortress");
         quarryButton = new Button("Quarry");
+        upgradeButton = new Button("Upgrade");
 
         // Style buttons
-        factoryButton.setPrefWidth(150);
         militaryCampButton.setPrefWidth(150);
-        missileFortressButton.setPrefWidth(150);
         quarryButton.setPrefWidth(150);
-
+        upgradeButton.setPrefWidth(150);
         // Add buttons to the pane
-        this.getChildren().addAll(factoryButton, militaryCampButton, missileFortressButton, quarryButton);
+        this.getChildren().addAll( quarryButton, militaryCampButton, upgradeButton);
 
         // Initially hidden
         this.setVisible(false);
 
         // Add action listeners
-        factoryButton.setOnAction(e -> handleBuild(new Factory(null, GameController.getInstance().getCurrentPlayer())));
-        militaryCampButton.setOnAction(e -> handleBuild(new MilitaryCamp(null, GameController.getInstance().getCurrentPlayer())));
-        missileFortressButton.setOnAction(e -> handleBuild(new MissileFortress(null, GameController.getInstance().getCurrentPlayer())));
         quarryButton.setOnAction(e -> handleBuild(new Quarry(null, GameController.getInstance().getCurrentPlayer())));
+        //factoryButton.setOnAction(e -> handleBuild(new Factory(null, GameController.getInstance().getCurrentPlayer())));
+        militaryCampButton.setOnAction(e -> handleBuild(new MilitaryCamp(null, GameController.getInstance().getCurrentPlayer())));
+        //missileFortressButton.setOnAction(e -> handleBuild(new MissileFortress(null, GameController.getInstance().getCurrentPlayer())));
+        upgradeButton.setOnAction(e -> handleBuild(new Colony(null, null)));
     }
 
     private void handleBuild(Building building) {
@@ -56,26 +55,36 @@ public class BuildActionPane extends VBox {
             System.out.println("Error: No hexagon selected for building!");
             return; // Prevent further execution if no hexagon is selected
         }
-
-        if (build.attemptBuild(selectedHexagon, building)) {
-            disableButtons(); // Disable all buttons after successful build
+        if(selectedHexagon.getBuilding() instanceof Upgradable && building instanceof Colony) {
+        	Upgradable uBuilding = ((Upgradable) selectedHexagon.getBuilding());
+        	uBuilding.upgrade();
+        	build.attemptBuild(selectedHexagon,selectedHexagon.getBuilding());
+        	disableButtons(); // Disable all buttons after successful build
             GameController.getInstance().markActionCompleted(); // Mark the action as completed        
-            }
+        }else if(selectedHexagon.getBuilding() == null && !(building instanceof Colony)) {
+        	if (build.attemptBuild(selectedHexagon, building)) {
+                disableButtons(); // Disable all buttons after successful build
+                GameController.getInstance().markActionCompleted(); // Mark the action as completed        
+                }
+        }
+        
     }
 
 
     public void disableButtons() {
-        factoryButton.setDisable(true);
+//        factoryButton.setDisable(true);
         militaryCampButton.setDisable(true);
-        missileFortressButton.setDisable(true);
+//        missileFortressButton.setDisable(true);
         quarryButton.setDisable(true);
+        upgradeButton.setDisable(true);
     }
 
     public void enableButtons() {
-        factoryButton.setDisable(false);
+//       factoryButton.setDisable(false);
         militaryCampButton.setDisable(false);
-        missileFortressButton.setDisable(false);
+//       missileFortressButton.setDisable(false);
         quarryButton.setDisable(false);
+        upgradeButton.setDisable(false);
     }
 
     public void updateButtonStates() {
@@ -83,10 +92,11 @@ public class BuildActionPane extends VBox {
             disableButtons(); // Disable if already built
         } else {
             // Enable/disable based on resources
-            factoryButton.setDisable(!build.canAffordBuilding(new Factory(null, GameController.getInstance().getCurrentPlayer())));
+//           factoryButton.setDisable(!build.canAffordBuilding(new Factory(null, GameController.getInstance().getCurrentPlayer())));
             militaryCampButton.setDisable(!build.canAffordBuilding(new MilitaryCamp(null, GameController.getInstance().getCurrentPlayer())));
-            missileFortressButton.setDisable(!build.canAffordBuilding(new MissileFortress(null, GameController.getInstance().getCurrentPlayer())));
+//            missileFortressButton.setDisable(!build.canAffordBuilding(new MissileFortress(null, GameController.getInstance().getCurrentPlayer())));
             quarryButton.setDisable(!build.canAffordBuilding(new Quarry(null, GameController.getInstance().getCurrentPlayer())));
+            upgradeButton.setDisable(false);
         }
     }
 }

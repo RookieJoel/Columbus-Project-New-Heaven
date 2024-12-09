@@ -1,14 +1,16 @@
 package game;
 
 import pane.BuildActionPane;
-import javafx.animation.FadeTransition;
-import javafx.animation.SequentialTransition;
-import javafx.scene.Node;
-import javafx.util.Duration;
+import pane.ConfirmationDialog;
+import pane.EndGamePane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 import pane.ActionPane;
 import pane.HexagonPane;
 import pane.StatusPane;
 import player.Player;
+import view.MainMenu;
 
 public class GameController {
     private static GameController instance; // Singleton instance
@@ -30,16 +32,17 @@ public class GameController {
     
     private boolean turnActionCompleted; // Flag to track if an action is completed in the current turn
     
+ // MediaPlayers for different music
+    private static MediaPlayer mainMenuMusicPlayer;
+    private static MediaPlayer gameMusicPlayer;
+    private static MediaPlayer endGameMusicPlayer;
+    
     private GameController(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
         this.currentPlayer = player1; // Default to Player 1
-        this.hexagonPane = new HexagonPane();
         
-    }
-
-    public HexagonPane getHexagonPane() {
-        return hexagonPane;
+        
     }
 
     public static GameController getInstance(Player player1, Player player2) {
@@ -79,7 +82,6 @@ public class GameController {
         return currentPlayer;
     }
     
-    
 
     public void switchTurn() {
         currentPlayer = (currentPlayer == player1) ? player2 : player1;
@@ -100,14 +102,12 @@ public class GameController {
         currentPlayer.printInventory(); // Debug inventory at the start of the turn
     }
     
-    
     public boolean isTurnActionCompleted() {
         return turnActionCompleted;
     }
 
     public void markActionCompleted() {
         this.turnActionCompleted = true;
-        
         getCurrentActionPane().disableAllButtons();
     }
     
@@ -150,16 +150,65 @@ public class GameController {
         }
         return null; // Default to null if the player is not recognized
     }
+
+    public boolean isGameEnd() {
+    	if(player1.getHp() <= 0 || player2.getHp() <=0) {
+    		return true; 		
+    	}
+    	return false;
+    }
     
-    public void resetHexagonBorders() {
-        hexagonPane.resetHexagonBorders(); // Clear all borders
-        hexagonPane.setAllHexagonsClickEnabled(false); // Disable all hexagon clicks
-        hexagonPane.setSeletedHexagon(null); // Clear selected hexagon
-        hexagonPane.setAttackingState(0); // Reset attacking state
+    public void endGame(StackPane rootPane,Stage stage) {
+    	EndGamePane endGamePane = new EndGamePane(rootPane);
+		Runnable openMainMenuAction = () -> {
+			MainMenu mainMenu = new MainMenu();
+            Stage mainStage = new Stage();
+            try {
+                mainMenu.start(mainStage);
+                stage.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        };
+        if(player1.getHp() <= 0) {
+        	endGamePane.show(
+                    player2.getName() + " Win!!",
+                    openMainMenuAction // Action to execute when confiSrmed
+                );
+        	return;
+        }
+        endGamePane.show(
+        		player1.getName() + " Win!!",
+                openMainMenuAction // Action to execute when confirmed
+            );
+    }
+    
+    // Centralized method to stop all music
+    public static void stopAllMusic() {
+        if (mainMenuMusicPlayer != null) {
+            mainMenuMusicPlayer.stop();
+        }
+        if (gameMusicPlayer != null) {
+            gameMusicPlayer.stop();
+        }
+        if (endGameMusicPlayer != null) {
+            endGameMusicPlayer.stop();
+        }
     }
 
+    // Setters for MediaPlayer instances
+    public static void setMainMenuMusicPlayer(MediaPlayer player) {
+        mainMenuMusicPlayer = player;
+    }
 
+    public static void setGameMusicPlayer(MediaPlayer player) {
+        gameMusicPlayer = player;
+    }
 
+    public static void setEndGameMusicPlayer(MediaPlayer player) {
+        endGameMusicPlayer = player;
+    }
+    
     public Player getPlayer1() {
         return player1;
     }
@@ -167,4 +216,13 @@ public class GameController {
     public Player getPlayer2() {
         return player2;
     }
+    
+    public HexagonPane getHexagonPane() {
+        return hexagonPane;
+    }
+
+	public void setHexagonPane(HexagonPane hexagonPane) {
+		this.hexagonPane = hexagonPane;
+		
+	}
 }

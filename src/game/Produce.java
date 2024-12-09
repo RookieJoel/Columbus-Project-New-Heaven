@@ -6,8 +6,8 @@ import pane.StatusPane;
 import player.Player;
 
 public class Produce {
-    private final Player player;
-    private final StatusPane statusPane;
+    private Player player;
+    private StatusPane statusPane;
 
     public Produce(Player player, StatusPane statusPane) {
         this.player = player;

@@ -10,18 +10,18 @@ public enum Resource {
     URANIUM("/images/uranium.png"),
     JOJOLIUM("/images/jojolium.png");
 
-    private final Image image;  // Instance field to store the image
-    private static final Random PRNG = new Random();
+    private final Image IMAGE;  // Instance field to store the image
+    private final static Random PRNG = new Random();
 
     // Constructor that initializes the image for each resource
     Resource(String imagePath) {
         // Load the image from the specified path
-        this.image = new Image(getClass().getResourceAsStream(imagePath));
+        this.IMAGE = new Image(getClass().getResourceAsStream(imagePath));
     }
 
     // Getter method to retrieve the image of the resource
     public Image getImage() {
-        return image;
+        return IMAGE;
     }
 
     // Static method to get a random resource

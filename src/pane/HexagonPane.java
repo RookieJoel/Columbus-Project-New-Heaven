@@ -9,6 +9,11 @@ import game.Build;
 import game.GameController;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import player.Player;
 
 import java.util.ArrayList;
@@ -26,7 +31,8 @@ public class HexagonPane extends Group {
     private Hexagon seletedHexagon;
     
     private Hexagon attackerHex;
-    private int atackingState = 0;
+    private int attackingState = 0;
+
 
     public HexagonPane() {
         createHexagons();
@@ -117,19 +123,22 @@ public class HexagonPane extends Group {
         int hexX = hexagon.getX();
         int hexY = hexagon.getY();
         seletedHexagon = hexagon;
-        if(atackingState == 1) {
+        if(attackingState == 1) {
         	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),
-                    GameController.getInstance().getHexagonPane(),
-                    null);
+                    GameController.getInstance().getHexagonPane());
         	 attackerHex = hexagon;
         	 attack.showTarketBuilding();
         	 return;
         }
-        if(atackingState == 2) {
-            GameController.getInstance().markActionCompleted(); // Mark the action as completed        
-
+        if(attackingState == 2) {
         	((Attackable) attackerHex.getBuilding()).attack(seletedHexagon.getBuilding());
-        	atackingState = 0;
+        	GameController.getInstance().markActionCompleted();
+        	attackingState = 0;
+        	if(GameController.getInstance().isGameEnd()) {
+        		Stage stage = (Stage) this.getScene().getWindow();
+        		StackPane stackPane = (StackPane) this.getScene().getRoot();
+        		GameController.getInstance().endGame(stackPane,stage);
+        	}
         	this.resetHexagonBorders();
         	this.setAllHexagonsClickEnabled(false);
         	return;
@@ -137,7 +146,7 @@ public class HexagonPane extends Group {
         this.resetHexagonBorders();
         hexagon.highlightBorder();
         System.out.println("Hexagon clicked at position: (" + hexX + ", " + hexY + ")");
-        	}
+        }
 
     public void setAllHexagonsClickEnabled(boolean enabled) {
         for (Hexagon hexagon : hexagons) {
@@ -204,10 +213,16 @@ public class HexagonPane extends Group {
 	}
 	
 	 public void setAttackingState(int atackingState) {
-			this.atackingState = atackingState;
+			this.attackingState = atackingState;
 		}
 
-    
+	 private StackPane findRootPane(Node node) {
+	        Scene scene = node.getScene(); // Retrieve the scene
+	        if (scene != null && scene.getRoot() instanceof StackPane) {
+	            return (StackPane) scene.getRoot(); // Return the root StackPane
+	        }
+	        return null; // Return null if root is not a StackPane
+	    }
     
     
 }

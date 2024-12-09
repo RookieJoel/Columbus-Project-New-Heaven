@@ -68,6 +68,7 @@ public class BottomPane extends HBox {
                 Platform.runLater(() -> {
                     resetHexagonBordersAction.run(); // Reset all hexagon borders
                     rollButton.setDisable(false);
+                    GameController.getInstance().getHexagonPane().setAttackingState(0);
                     GameController.getInstance().getHexagonPane().setSeletedHexagon(null);
                     GameController.getInstance().getHexagonPane().setAllHexagonsClickEnabled(false);
                     int rollResult = dice.roll();

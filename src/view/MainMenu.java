@@ -1,5 +1,6 @@
 package view;
 
+import game.GameController;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,13 +14,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class MainMenu extends Application {
 
     private StackPane rootPane; // Root pane to manage multiple layers
+    private static MediaPlayer backgroundMusic; // Static to allow centralized control
 
     @Override
     public void start(Stage primaryStage) {
+        // Stop all music before starting main menu music
+        GameController.stopAllMusic();
         // Set the background image
         String imagePath = ClassLoader.getSystemResource("images/new.png").toString();
         ImageView bg = new ImageView(new Image(imagePath));
@@ -38,17 +44,32 @@ public class MainMenu extends Application {
         title.setStrokeWidth(2);
         title.setTranslateY(-250);
 
+        // Background Music
+        String musicPath = getClass().getResource("/sounds/bg.wav").toExternalForm();
+        Media media = new Media(musicPath);
+        backgroundMusic = new MediaPlayer(media);
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE); // Loop the music
+        backgroundMusic.setVolume(0.15); // Set volume
+        backgroundMusic.play(); // Start playing
+
         // Create main buttons
         Button startButton = createMainButton("START");
         Button howToPlayButton = createSecondaryButton("How to Play");
         Button exitButton = createSecondaryButton("EXIT");
-
+        
+     // Register music player in GameController
+        GameController.setMainMenuMusicPlayer(backgroundMusic);
         // Button actions
-        startButton.setOnAction(e -> openGame(primaryStage));
+        startButton.setOnAction(e -> {
+            // Stop main menu music
+            openGame(primaryStage);
+        });
+
         howToPlayButton.setOnAction(e -> {
             Help help = new Help(rootPane); // Pass rootPane to Help
             help.showHowToPlayPane(); // Show HowToPlay Pane
         });
+
         exitButton.setOnAction(e -> primaryStage.close());
 
         // Arrange buttons horizontally with main button in the center
@@ -97,6 +118,6 @@ public class MainMenu extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 }

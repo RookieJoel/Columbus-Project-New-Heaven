@@ -1,29 +1,27 @@
 package game;
 
 import board.Hexagon;
-import building.Building;
 import building.MilitaryCamp;
 import building.MissileFortress;
 import building.interfaces.Attackable;
 import pane.HexagonPane;
-import pane.StatusPane;
 import player.Player;
 
 public class Attack {
 	
 	private Player currentPlayer;
     private HexagonPane hexagonPane;
-    private StatusPane statusPane;
     public static boolean attackMode = false;
     
-    public Attack(Player player, HexagonPane hexagonPane,StatusPane statusPane) {
+    public Attack(Player player, HexagonPane hexagonPane) {
         this.currentPlayer = player;
         this.hexagonPane = hexagonPane;
-        this.statusPane = statusPane;
     }
     
     public void showAttackableBuilding() {
+    	hexagonPane.resetHexagonBorders();
     	hexagonPane.setAllHexagonsClickEnabled(false);
+    	hexagonPane.setAttackingState(1);
     	for(Hexagon hexagon : hexagonPane.getHexagons()) {
     		if(hexagon.getBuilding() instanceof Attackable && hexagon.getBuilding().getPlayer() == currentPlayer) {
     			hexagon.highlightBorder();
@@ -41,7 +39,7 @@ public class Attack {
     			if(hexagon.getBuilding() != null && hexagon.getBuilding().getPlayer() != currentPlayer) {
     				hexagon.highlightBorder();
     				hexagon.setClickEnabled(true);
-    				GameController.getInstance().getHexagonPane().setAttackingState(2);
+    				hexagonPane.setAttackingState(2);
     			}
     		}
     		
@@ -51,10 +49,13 @@ public class Attack {
     			if(hexagon.getBuilding() != null && hexagon.getBuilding().getPlayer() != currentPlayer) {
     				hexagon.highlightBorder();
     				hexagon.setClickEnabled(true);
-    				GameController.getInstance().getHexagonPane().setAttackingState(2);
+    				hexagonPane.setAttackingState(2);
     			}
     		}
     	}
     }
+    
+
+    
 
 }

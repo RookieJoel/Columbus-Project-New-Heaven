@@ -15,9 +15,9 @@ public class Dice {
     private static final int DICE_SIZE = 100;
     private static final int FONT_SIZE = 50;
 
-    private final Random random = new Random();
-    private final StackPane dicePane;
-    private final Text diceValueText;
+    private final Random RAND = new Random();
+    private final StackPane DICE_PANE;
+    private final Text DICE_TEXT;
 
     public Dice() {
         // Create the dice face
@@ -28,23 +28,23 @@ public class Dice {
         diceFace.setArcHeight(15);
 
         // Create the text displaying the dice value
-        diceValueText = new Text("1");
-        diceValueText.setFont(Font.font(FONT_SIZE));
+        DICE_TEXT = new Text("1");
+        DICE_TEXT.setFont(Font.font(FONT_SIZE));
 
         // StackPane to contain the dice face and value text
-        dicePane = new StackPane(diceFace, diceValueText);
-        dicePane.setAlignment(Pos.CENTER);
+        DICE_PANE = new StackPane(diceFace, DICE_TEXT);
+        DICE_PANE.setAlignment(Pos.CENTER);
     }
 
     // Method to roll the dice and update the displayed value
     public int roll() {
-        int rollResult = random.nextInt(10);
-        diceValueText.setText(String.valueOf(rollResult));
+        int rollResult = RAND.nextInt(10);
+        DICE_TEXT.setText(String.valueOf(rollResult));
         return rollResult;
     }
 
     // Method to get the StackPane for adding to the GUI
     public StackPane getDicePane() {
-        return dicePane;
+        return DICE_PANE;
     }
 }

@@ -6,44 +6,42 @@ import java.util.Map;
 import board.Resource;
 
 public class Inventory {
-    private final Map<Resource, Integer> resources;
+    private final Map<Resource, Integer> RESOURCES;
 
     public Inventory() {
-        this.resources = new HashMap<>();
+        this.RESOURCES = new HashMap<>();
         initializeResources();
     }
 
     // Initialize all resources to 0
     private void initializeResources() {
-        resources.put(Resource.VIBRANIUM, 999);
-        resources.put(Resource.OIL, 999);
-        resources.put(Resource.COPPER, 999);
-        resources.put(Resource.URANIUM, 999);
-        resources.put(Resource.JOJOLIUM, 999);
+    	RESOURCES.put(Resource.VIBRANIUM, 3);
+    	RESOURCES.put(Resource.OIL, 0);
+    	RESOURCES.put(Resource.COPPER, 3);
+    	RESOURCES.put(Resource.URANIUM, 0);
+        RESOURCES.put(Resource.JOJOLIUM, 0);
     }
 
     public Map<Resource, Integer> getResources() {
-        return resources;
+        return RESOURCES;
     }
 
     public void addResource(Resource resource, int amount) {
-        resources.put(resource, resources.getOrDefault(resource, 0) + amount);
+    	RESOURCES.put(resource, RESOURCES.getOrDefault(resource, 0) + amount);
     }
 
     public boolean removeResource(Resource resource, int amount) {
         // ตรวจสอบว่ามี Resource เพียงพอ
-        if (resources.getOrDefault(resource, 0) < amount) {
+        if (RESOURCES.getOrDefault(resource, 0) < amount) {
             return false; // ไม่เพียงพอ
         }
 
         // ลดจำนวน Resource
-        resources.put(resource, resources.get(resource) - amount);
+        RESOURCES.put(resource, RESOURCES.get(resource) - amount);
         return true;
     }
 
-
-
     public int getResource(Resource resource) {
-        return resources.getOrDefault(resource, 0);
+        return RESOURCES.getOrDefault(resource, 0);
     }
 }

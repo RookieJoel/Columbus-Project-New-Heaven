@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import player.Player;
 
@@ -33,21 +34,30 @@ public class AlchemizePane extends VBox {
         // Instructions
         Label instructionLabel = new Label("Alchemize Resources:");
         instructionLabel.setStyle("-fx-font-size: 16; -fx-text-fill: white;");
+        
+        Label fromResourceLabel = new Label("Give Resource:");
+        fromResourceLabel.setStyle("-fx-font-size: 14; -fx-text-fill: white;");
+
+        Label toResourceLabel = new Label("Receive Resource:");
+        toResourceLabel.setStyle("-fx-font-size: 14; -fx-text-fill: white;");
 
         // Dropdowns for selecting resources
         fromResource = new ComboBox<>();
         fromResource.getItems().addAll(Resource.values());
-        fromResource.setPromptText("Give Resource");
         fromResource.setMaxWidth(150);
         fromResource.setPrefHeight(50);
 
 
         toResource = new ComboBox<>();
         toResource.getItems().addAll(Resource.values());
-        toResource.setPromptText("Receive Resource");
         toResource.setMaxWidth(150);
         toResource.setPrefHeight(50);
 
+        HBox fromResourceBox = new HBox(10, fromResourceLabel, fromResource);
+        fromResourceBox.setAlignment(Pos.CENTER);
+
+        HBox toResourceBox = new HBox(10, toResourceLabel, toResource);
+        toResourceBox.setAlignment(Pos.CENTER);
 
         // Input for the amount
         amountField = new TextField();
@@ -75,7 +85,7 @@ public class AlchemizePane extends VBox {
 
         // Add all elements to the pane
         this.getChildren().addAll(
-            instructionLabel, fromResource, toResource, amountField, alchemizeButton, closeButton, feedbackLabel
+            instructionLabel, fromResourceBox, toResourceBox, amountField, alchemizeButton, closeButton, feedbackLabel
         );
 
         this.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-border-color: white; -fx-border-width: 2px;");
@@ -117,6 +127,8 @@ public class AlchemizePane extends VBox {
             // Perform the alchemy
             currentPlayer.getInventory().removeResource(from, cost);
             currentPlayer.getInventory().addResource(to, amountToReceive);
+            
+            GameController.getInstance().getStatusPaneForPlayer(currentPlayer).updateResources(currentPlayer);
 
             feedbackLabel.setText("Successfully exchanged " + cost + " " + from + " for " + amountToReceive + " " + to + ".");
             GameController.getInstance().markActionCompleted(); // Mark action as completed
@@ -153,10 +165,10 @@ public class AlchemizePane extends VBox {
 
     public void resetFields() {
         // Clear selections and reapply prompt text
-        fromResource.getSelectionModel().clearSelection();
+        fromResource.setValue(null);
         fromResource.setPromptText("Give Resource");
 
-        toResource.getSelectionModel().clearSelection();
+        toResource.setValue(null);
         toResource.setPromptText("Receive Resource");
 
         // Clear the amount field and feedback label

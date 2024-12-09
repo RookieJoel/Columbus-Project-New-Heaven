@@ -54,36 +54,35 @@ public class ActionPane extends VBox {
     }
     
     private void onAttackButtonClicked() {
-    	 if (GameController.getInstance().isTurnActionCompleted()) {
-    	        System.out.println("You cannot perform another action this turn!");
-    	        return;
-    	    }
-
-    	GameController.getInstance().resetHexagonBorders();
-    	Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),GameController.getInstance().getHexagonPane(),null);
-    	GameController.getInstance().getHexagonPane().setAttackingState(1);
-    	attack.showAttackableBuilding();
-    	
-    }
-
-    private void onBuildButtonClicked() {
         if (GameController.getInstance().isTurnActionCompleted()) {
             System.out.println("You cannot perform another action this turn!");
             return;
         }
+        buildActionPane.setVisible(false);
 
-        GameController.getInstance().resetHexagonBorders(); // Clear borders and state
-        buildActionPane.setVisible(!buildActionPane.isVisible());
-        Build build = new Build(GameController.getInstance().getCurrentPlayer(),
-                                GameController.getInstance().getHexagonPane(),
-                                null);
-        build.canBuildHex();
+        Attack attack = new Attack(GameController.getInstance().getCurrentPlayer(),
+                                    GameController.getInstance().getHexagonPane());
+        attack.showAttackableBuilding();
     }
 
+    private void onBuildButtonClicked() {
+    	GameController.getInstance().getHexagonPane().setAttackingState(0);
+        // Toggle visibility of BuildActionPane
+        buildActionPane.setVisible(!buildActionPane.isVisible());
+        Build build = new Build(GameController.getInstance().getCurrentPlayer(),
+                                GameController.getInstance().getHexagonPane(), null);
+        build.canBuildHex();
+    }
     
     private void onProduceButtonClicked() {
+    	  if (GameController.getInstance().isTurnActionCompleted()) {
+              System.out.println("You cannot perform another action this turn!");
+              return;
+          }
+    	GameController.getInstance().getHexagonPane().setAttackingState(0);
+    	GameController.getInstance().getHexagonPane().resetHexagonBorders();
         System.out.println("Produce button clicked.");
-
+        GameController.getInstance().getHexagonPane().setAttackingState(0);
         // Get the current player's StatusPane
         StatusPane currentStatusPane = GameController.getInstance().getCurrentStatusPane();
         if (currentStatusPane == null) {
@@ -106,6 +105,8 @@ public class ActionPane extends VBox {
 
 
     private void onAlchemizeButtonClicked() {
+    	GameController.getInstance().getHexagonPane().setAttackingState(0);
+    	GameController.getInstance().getHexagonPane().resetHexagonBorders();
         if (GameController.getInstance().isTurnActionCompleted()) {
             System.out.println("You cannot perform another action this turn!");
             return;
@@ -127,6 +128,11 @@ public class ActionPane extends VBox {
         attackButton.setDisable(true);
         produceButton.setDisable(true);
         alchemizeButton.setDisable(true);
+
+        // Disable buttons in BuildActionPane
+        if (buildActionPane != null) {
+            buildActionPane.disableButtons();
+        }
     }
 
     public void enableAllButtons() {
@@ -134,6 +140,11 @@ public class ActionPane extends VBox {
         attackButton.setDisable(false);
         produceButton.setDisable(false);
         alchemizeButton.setDisable(false);
+
+        // Enable buttons in BuildActionPane
+        if (buildActionPane != null) {
+            buildActionPane.enableButtons();
+        }
     }
 
     

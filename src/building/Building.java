@@ -2,19 +2,14 @@ package building;
 
 import java.util.HashMap;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import java.util.Map;
 
@@ -27,17 +22,15 @@ public abstract class Building {
 	 	private final String id; // Identifier based on hash of tile number and type
 	    private String name; // Name of the building
 	    private int hp; // Hit Points of the building
-	    private int prosperityPoints; // Points the building contributes to the player
 	    private Hexagon position; // Hexagon where the building is constructed
 	    private boolean isDestroyed; // Indicates if the building has been destroyed
 	    private Player player;
 	    private Map<Resource,Integer> cost;
 	    private Text hpText; // Text to display HP
 	    
-	    public Building(String name, int hp, int prosperityPoints, Hexagon position,Player player) {
+	    public Building(String name, int hp, Hexagon position,Player player) {
 	        this.name = name;
 	        this.hp = hp;
-	        this.prosperityPoints = prosperityPoints;
 	        this.position = position;
 	        this.player = player;
 	        this.isDestroyed = false;
@@ -85,14 +78,6 @@ public abstract class Building {
 	        updateHpDisplay();
 	    }
 
-	    public int getProsperityPoints() {
-	        return prosperityPoints;
-	    }
-
-	    public void setProsperityPoints(int prosperityPoints) {
-	        this.prosperityPoints = prosperityPoints;
-	    }
-
 	    public Hexagon getPosition() {
 	        return position;
 	    }
@@ -101,12 +86,7 @@ public abstract class Building {
 	        this.position = position;
 	    }
 
-	    public boolean isDestroyed() {
-	    	if(this.hp <= 0) {
-	    		return true;
-	    	}
-	    	return false;
-	    }
+	    
 
 	    public String getId() {
 	        return id;
@@ -155,9 +135,6 @@ public abstract class Building {
 		}
 		
 		protected Color getPlayerColor() {
-	        if (player == null) {
-	            return Color.GRAY; // Default color if no player is assigned
-	        }
 	        return player.getId() == 1 ? Color.BLUE : Color.GREEN; // Blue for Player 1, Green for Player 2
 	    }
 		
@@ -211,6 +188,20 @@ public abstract class Building {
 		    return new Group(hexagon, innerHexagon, hpText);
 		}
 
+
+		public void setDestroyed(boolean isDestroyed) {
+			this.isDestroyed = isDestroyed;
+		}
+
+
+		public boolean isDestroyed() {
+			if(getHp() <= 0) return true;
+			return false;
+		}
+		
+		
+		
+		
 	
 
 }
