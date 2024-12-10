@@ -37,6 +37,7 @@ public class Quarry extends Building implements Produceable,Upgradable{
 	@Override
 	public void upgrade() {
 		Factory factory = new Factory(getPosition(), getPlayer());
+		getPlayer().getBuildings().remove(this);
 		this.getPosition().setBuilding(factory);
 		
 	}

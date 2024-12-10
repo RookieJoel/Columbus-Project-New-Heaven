@@ -24,7 +24,7 @@ public class Help {
         howToPlayPane.setAlignment(Pos.CENTER);
 
         // Add a background with rounded corners
-        Rectangle background = new Rectangle(700, 500); // Width x Height
+        Rectangle background = new Rectangle(700, 600); // Width x Height
         background.setArcWidth(30); // Rounded corners
         background.setArcHeight(30);
         background.setFill(Color.DARKSLATEBLUE); // Background color
@@ -35,12 +35,13 @@ public class Help {
         // HowToPlay Text
         Text howToPlayText = new Text(
             "How to Play:\n" +
-            "1. กดปุ่ม START เพื่อเริ่มเกม\n" +
-            "2. เลือกทำได้ 1 Action ต่อ turn\n" +
-            "3. กดปุ่ม Roll เพื่อจบ turn\n" +
-            "4. ใช้ทรัพยากรเพื่อสร้างอาวุธไปโจมตีศัตรู\n" +
-            "5. ปกป้อง Colony ของคุณซะ!\n" +
-            "เล่นให้สนุก!"
+            "1. Press Start button\n" +
+            "2. performing 1 action a turn\n" +
+            "3. roll the dice to end your turn\n" +
+            "4. managing your resources\n" +
+            "and launch effective counter-attacks\n"+ "to secure victory.\n"+
+            "5. Defending your colony at all cost!\n" +
+            "have fun!!!"
         );
         howToPlayText.setFont(new Font(40));
         howToPlayText.setFill(Color.LIGHTCYAN);

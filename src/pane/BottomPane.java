@@ -32,8 +32,7 @@ public class BottomPane extends HBox {
         // Load the dice rolling sound effect
         String audioPath = ClassLoader.getSystemResource("sounds/DrumRoll.mp3").toString();
         AudioClip diceSound = new AudioClip(audioPath);
-
-        // Dice Box
+        diceSound.setVolume(0.25);
         dice = new Dice();
         VBox diceBox = new VBox(15, dice.getDicePane());
         diceBox.setAlignment(Pos.CENTER_LEFT);
@@ -43,7 +42,7 @@ public class BottomPane extends HBox {
         rollButton.setFont(Font.font(20));
         rollButton.setOnAction(e -> {
             diceSound.play(); // Play dice roll sound
-
+            
             // Create a new thread to roll the dice continuously and randomly highlight hexagons
             new Thread(() -> {
                 long startTime = System.currentTimeMillis();

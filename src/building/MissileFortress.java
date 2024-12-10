@@ -23,10 +23,7 @@ public class MissileFortress extends Building implements Attackable{
 	@Override
 	public void attack(Building target) {
 	    if (target != null) {
-	        target.takeDamage(atk); // Deal damage to the target
-	        if (target.isDestroyed()) {
-	            target.getPosition().setBuilding(null); // Remove the building from the board
-	        }
+	        target.takeDamage(atk); // Deal damage to the target	   
 	    }
 	}
 	

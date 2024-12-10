@@ -57,10 +57,12 @@ public class BuildActionPane extends VBox {
         }
         if(selectedHexagon.getBuilding() instanceof Upgradable && building instanceof Colony) {
         	Upgradable uBuilding = ((Upgradable) selectedHexagon.getBuilding());
-        	uBuilding.upgrade();
-        	build.attemptBuild(selectedHexagon,selectedHexagon.getBuilding());
-        	disableButtons(); // Disable all buttons after successful build
-            GameController.getInstance().markActionCompleted(); // Mark the action as completed        
+        	if(uBuilding.canUpgrade()) {
+        		uBuilding.upgrade();
+        		build.attemptBuild(selectedHexagon,selectedHexagon.getBuilding());
+        		disableButtons(); // Disable all buttons after successful build
+        		GameController.getInstance().markActionCompleted();
+        	}// Mark the action as completed        
         }else if(selectedHexagon.getBuilding() == null && !(building instanceof Colony)) {
         	if (build.attemptBuild(selectedHexagon, building)) {
                 disableButtons(); // Disable all buttons after successful build
@@ -72,17 +74,13 @@ public class BuildActionPane extends VBox {
 
 
     public void disableButtons() {
-//        factoryButton.setDisable(true);
         militaryCampButton.setDisable(true);
-//        missileFortressButton.setDisable(true);
         quarryButton.setDisable(true);
         upgradeButton.setDisable(true);
     }
 
     public void enableButtons() {
-//       factoryButton.setDisable(false);
         militaryCampButton.setDisable(false);
-//       missileFortressButton.setDisable(false);
         quarryButton.setDisable(false);
         upgradeButton.setDisable(false);
     }
@@ -92,9 +90,7 @@ public class BuildActionPane extends VBox {
             disableButtons(); // Disable if already built
         } else {
             // Enable/disable based on resources
-//           factoryButton.setDisable(!build.canAffordBuilding(new Factory(null, GameController.getInstance().getCurrentPlayer())));
             militaryCampButton.setDisable(!build.canAffordBuilding(new MilitaryCamp(null, GameController.getInstance().getCurrentPlayer())));
-//            missileFortressButton.setDisable(!build.canAffordBuilding(new MissileFortress(null, GameController.getInstance().getCurrentPlayer())));
             quarryButton.setDisable(!build.canAffordBuilding(new Quarry(null, GameController.getInstance().getCurrentPlayer())));
             upgradeButton.setDisable(false);
         }

@@ -49,7 +49,7 @@ public class MainMenu extends Application {
         Media media = new Media(musicPath);
         backgroundMusic = new MediaPlayer(media);
         backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE); // Loop the music
-        backgroundMusic.setVolume(0.15); // Set volume
+        backgroundMusic.setVolume(0.3); // Set volume
         backgroundMusic.play(); // Start playing
 
         // Create main buttons

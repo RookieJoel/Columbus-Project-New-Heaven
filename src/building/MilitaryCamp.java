@@ -19,7 +19,7 @@ public class MilitaryCamp extends Building implements Attackable,Upgradable{
 		
 	public MilitaryCamp(Hexagon position, Player player) {
 		super("MilitaryCamp", 5, position, player);
-		this.setAtk(3);
+		this.setAtk(2);
 		this.addCost(Resource.VIBRANIUM, 3);
 	}
 
@@ -55,9 +55,6 @@ public class MilitaryCamp extends Building implements Attackable,Upgradable{
 	public void attack(Building target) {
 	    if (target != null) {
 	        target.takeDamage(atk); // Deal damage to the target
-	        if (target.isDestroyed()) {
-	            target.getPosition().setBuilding(null); // Remove the building from the board
-	        }
 	    }
 	}
 

@@ -20,7 +20,7 @@ import player.Player;
 
 public abstract class Building {
 	 	private final String ID; // Identifier based on hash of tile number and type
-	    private String name; // Name of the building
+	    private String NAME; // Name of the building
 	    private int hp; // Hit Points of the building
 	    private Hexagon position; // Hexagon where the building is constructed
 	    private boolean isDestroyed; // Indicates if the building has been destroyed
@@ -29,11 +29,11 @@ public abstract class Building {
 	    private Text hpText; // Text to display HP
 	    
 	    public Building(String name, int hp, Hexagon position,Player player) {
-	        setName(name);
-	        setHp(hp);
-	        setPosition(position);
-	        setPlayer(player);
-	        setDestroyed(false);
+	        this.NAME = name;
+	        this.hp = hp;
+	        this.position = position;
+	        this.player = player;
+	        this.isDestroyed = false;
 	        this.cost = new HashMap<>();
 
 	        initializeHpText();
@@ -59,12 +59,9 @@ public abstract class Building {
 	    
 	    // Getters and setters
 	    public String getName() {
-	        return name;
+	        return NAME;
 	    }
 
-	    public void setName(String name) {
-	        this.name = name;
-	    }
 
 	    public int getHp() {
 	        return hp;
@@ -74,6 +71,7 @@ public abstract class Building {
 	        this.hp = Math.max(0, hp);
 	        if (this.hp == 0) {
 	            this.isDestroyed = true;
+	            
 	        }
 	        updateHpDisplay();
 	    }
@@ -97,6 +95,8 @@ public abstract class Building {
 	        this.hp = Math.max(0, this.hp - damage); // Reduce HP, ensure it doesn’t go below 0
 	        if (this.hp == 0) {
 	            this.isDestroyed = true;
+	            this.getPosition().setBuilding(null);
+	            this.getPlayer().getBuildings().remove(this);	        
 	        }
 	        updateHpDisplay();
 
