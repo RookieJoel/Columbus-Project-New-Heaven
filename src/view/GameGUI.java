@@ -97,8 +97,8 @@ public class GameGUI extends Application {
         BuildActionPane buildPane1 = new BuildActionPane(build1);
         BuildActionPane buildPane2 = new BuildActionPane(build2);
 
-        ActionPane player1Actions = new ActionPane("Player 1", null, buildPane1, alchemizePane);
-        ActionPane player2Actions = new ActionPane("Player 2", null, buildPane2, alchemizePane);
+        ActionPane player1Actions = new ActionPane("Player 1", buildPane1, alchemizePane);
+        ActionPane player2Actions = new ActionPane("Player 2", buildPane2, alchemizePane);
 
         // Set panes in GameController
         gameController.setBuildActionPanes(buildPane1, buildPane2);

@@ -216,13 +216,6 @@ public class HexagonPane extends Group {
 			this.attackingState = atackingState;
 		}
 
-	 private StackPane findRootPane(Node node) {
-	        Scene scene = node.getScene(); // Retrieve the scene
-	        if (scene != null && scene.getRoot() instanceof StackPane) {
-	            return (StackPane) scene.getRoot(); // Return the root StackPane
-	        }
-	        return null; // Return null if root is not a StackPane
-	    }
     
     
 }

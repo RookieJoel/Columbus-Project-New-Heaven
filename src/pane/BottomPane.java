@@ -54,6 +54,7 @@ public class BottomPane extends HBox {
                         dice.roll();
                         rollButton.setDisable(true);
                         highlightRandomHexagonAction.run(); // Randomly highlight a hexagon
+                        GameController.getInstance().getCurrentActionPane().disableAllButtons();
                     });
 
                     // Delay between updates to make it look like a rolling and flashing effect

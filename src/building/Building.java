@@ -179,7 +179,7 @@ public abstract class Building {
 		    Image image = new Image(getClass().getResourceAsStream(imagePath));
 		    innerHexagon.setFill(new ImagePattern(image));
 
-		    // Position the HP text
+		    // Positioning the HP text
 		    Text hpText = getHpText();
 		    hpText.setTranslateX(-radius * scale * 0.3); // Adjust position based on scaled radius
 		    hpText.setTranslateY(radius * scale * 0.9);  // Position below the scaled hexagon

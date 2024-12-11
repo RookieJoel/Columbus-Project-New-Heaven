@@ -18,7 +18,7 @@ public class ActionPane extends VBox {
     private AlchemizePane alchemizePane; // Reference to AlchemizePane
     
 
-    public ActionPane(String playerName, GameController gameController, BuildActionPane buildActionPane, AlchemizePane alchemizePane) {
+    public ActionPane(String playerName, BuildActionPane buildActionPane, AlchemizePane alchemizePane) {
         super(10); // Spacing between buttons
         this.buildActionPane = buildActionPane;
         this.alchemizePane = alchemizePane;
