@@ -45,4 +45,4 @@ Set in a post-apocalyptic world, players take on the role of factions competing 
 ## 🔧 Installation & Setup
 1. Clone the repository
 2. cd to the folder
-3. java -jar --module-path <your javaFX lib> --add-modules javafx.controls,javafx.graphics,javafx.media,javafx.fxml Columbus.jar
+3. use this command in cmd to run the game : java -jar --module-path <your javaFX lib> --add-modules javafx.controls,javafx.graphics,javafx.media,javafx.fxml Columbus.jar
