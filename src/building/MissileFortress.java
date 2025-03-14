@@ -17,7 +17,6 @@ public class MissileFortress extends Building implements Attackable{
 		super("MissileFortress", 8, position, player);
 		this.setAtk(3);
 		this.addCost(Resource.URANIUM, 8);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -37,7 +36,6 @@ public class MissileFortress extends Building implements Attackable{
         }
         return targetableHexagons;
     }
-
 
 	public int getAtk() {
 		return atk;

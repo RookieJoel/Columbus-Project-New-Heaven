@@ -20,7 +20,7 @@ import player.Player;
 
 public abstract class Building {
 	 	private final String ID; // Identifier based on hash of tile number and type
-	    private String NAME; // Name of the building
+	    private String name; // name of the building
 	    private int hp; // Hit Points of the building
 	    private Hexagon position; // Hexagon where the building is constructed
 	    private boolean isDestroyed; // Indicates if the building has been destroyed
@@ -29,7 +29,7 @@ public abstract class Building {
 	    private Text hpText; // Text to display HP
 	    
 	    public Building(String name, int hp, Hexagon position,Player player) {
-	        this.NAME = name;
+	        this.name = name;
 	        this.hp = hp;
 	        this.position = position;
 	        this.player = player;
@@ -59,7 +59,7 @@ public abstract class Building {
 	    
 	    // Getters and setters
 	    public String getName() {
-	        return NAME;
+	        return name;
 	    }
 
 
