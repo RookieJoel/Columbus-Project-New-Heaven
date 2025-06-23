@@ -44,8 +44,8 @@ Set in a post-apocalyptic world, players take on the role of factions competing 
    
 ## 📄 Documentation
 
-- 📘 [Game Document and Rules (PDF)](Project Report Comlunbus Project.pdf)
-
+- 📘 [Download Project Report (PDF)](./Project%20Report%20Comlunbus%20Project.pdf)
+  
 ## 🔧 Installation & Setup
 1. Clone the repository
 2. cd to the folder
