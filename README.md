@@ -41,6 +41,10 @@ Set in a post-apocalyptic world, players take on the role of factions competing 
 3. **Strategize** – Balance economy, defense, and offense against the opponent.
 4. **Engage in combat** – Attack to weaken the opponent’s colony while protecting your own.
 5. **Win the game** – The first player to reduce their opponent’s **Colony HP to 0** wins.
+   
+## 📄 Documentation
+
+- 📘 [Game Document and Rules (PDF)](Project Report Comlunbus Project.pdf)
 
 ## 🔧 Installation & Setup
 1. Clone the repository
